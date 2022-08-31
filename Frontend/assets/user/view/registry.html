@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/registry.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <!-- Icon -->
+    <link rel="stylesheet" href="../font/themify-icons/themify-icons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <style>
+        select:invalid {
+            color: gray;
+        }
+
+        #search-results h6 {
+            font-size: 15px;
+        }
+
+        #search-results .product-name {
+            transform: translateY(-142%);
+        }
+    </style>
+</head>
+
+<body>
+    <section id="header" class="bootstrap-iso">
+
+        <a href="./home.html"><img src="../img/logo.png" class="logo"></a>
+        <div class="searchbox">
+            <i id="ti-search" class="ti-search"></i>
+            <form action="./search-results.html" method="GET" id="searchform">
+                <input id="searchbar" name="searchbar" type="text" placeholder="Tìm kiếm sản phẩm..."
+                    autocomplete="off">
+            </form>
+            <div id="search-results">
+
+            </div>
+        </div>
+
+        <div class="actionbar">
+            <i id="mycart" class="ti-shopping-cart">
+                <span id="cartamount">3</span>
+            </i>
+            <i id="notification" class="ti-bell"></i>
+            <a id="user" href="#"><img src="" alt="" id="avatar">
+                <ul id="more-option">
+                    <li><i class="fa-solid fa-truck-fast" style="color: #256cc0;"></i>
+                        <a id="abc" href="./my-orders.html"> Đơn hàng của bạn</a>
+                    </li>
+                    <li id="logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: crimson;"></i>
+                        Đăng xuất</li>
+                </ul>
+            </a>
+            <a id="login" href="./login.html">Đăng nhập</a>
+        </div>
+    </section>
+
+    <div class="main" style="border-top: 59px solid transparent;">
+        <form action="" method="POST" class="form" id="form-1">
+            <h3 class="heading">Đăng ký</h3>
+            <p class="desc">Sắm đồ sành điệu tại Deskita</p>
+
+            <div class="spacer"></div>
+
+            <div class="form-group">
+                <label for="fullname" class="form-label">Tên đầy đủ</label>
+                <input id="fullname" name="name" type="text" placeholder="VD: Sơn Đặng" class="form-control">
+                <span class="form-message"></span>
+            </div class="form-group">
+
+            <div class="form-group">
+                <label for="phone" class="form-label">Số điện thoại</label>
+                <input id="phone" name="phone" type="text" placeholder="Số điện thoại" class="form-control">
+                <span class="form-message"></span>
+            </div class="form-group">
+
+            <div class="form-group">
+                <label for="birth" class="form-label">Ngày sinh</label>
+                <div class="form-birth" id="birth">
+                    <select required id="birth_day" title="Ngày" class="form-control">
+                    </select>
+                    <select required id="birth_month" title="Tháng" class="form-control">
+                    </select>
+                    <select required id="birth_year" title="Năm" class="form-control">
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group sex">
+                <p class="form-label" style="line-height: 40px; margin-right: 30px; padding-bottom: 0;">Giới tính</p>
+                <input id="male" name="sex" type="radio" class="form-control" value="1" checked>
+                <label for="male" class="form-label sex" style="margin-right: 30px;">Nam</label>
+                <input id="female" name="sex" type="radio" class="form-control" value="0">
+                <label for="female" class="form-label sex">Nữ</label>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" name="email" type="text" placeholder="VD: email@domain.com" class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password_confirmation" class="form-label">Nhập lại mật khẩu</label>
+                <input id="password_confirmation" placeholder="Nhập lại mật khẩu" type="password" class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <button class="form-submit">Đăng ký</button>
+        </form>
+    </div>
+    <script src="../scripts/lib/validator.js"></script>
+    <script src="../scripts/lib/globalfunc.js"></script>
+    <script src="../scripts/api/user.js"></script>
+    <script src="../scripts/api/product.js"></script>
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/renderer.js"></script>
+    <script>
+        SetupDate('#form-1 #birth');
+        Validator({
+            form: '#form-1',
+            requirements: [
+                Validator.isRequired('#fullname'),
+                Validator.isRequired('#password'),
+                Validator.isRequired('#fullname'),
+                Validator.isRequired('#password_confirmation'),
+                Validator.isEmail('#email'),
+                Validator.isPhoneNumber('#phone'),
+                Validator.isPasswordPass('#password'),
+                Validator.isPasswordConfirm('#password_confirmation', function () {
+                    return document.querySelector('#form-1 #password').value;
+                })
+            ],
+            onSubmit: function (data) {
+                registry(JSON.stringify(data));
+            }
+        });
+    </script>
+</body>
+
+</html>

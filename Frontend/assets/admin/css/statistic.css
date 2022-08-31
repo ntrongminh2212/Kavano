@@ -1,0 +1,88 @@
+#main {
+    border-top: 58px solid transparent;
+    background-color: #f6f6f6;
+}
+
+.overall-item {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.select-date {
+    display: flex;
+}
+
+.overall-item h1 {
+    margin-top: 24px;
+}
+
+#overall-revenue h1 {
+    color: green;
+}
+
+.select-date label {
+    font-weight: 500;
+    font-size: 18px;
+    padding: 8px;
+}
+
+.select-date input {
+    margin-right: 100px;
+    width: 16%;
+}
+
+#alltime-total {}
+
+#completeorderscount {}
+
+#revenueChart,
+#statusCountChart {
+    height: 500px;
+    overflow: visible;
+}
+
+.label-container {
+    padding: 12px 12px;
+    font-size: larger;
+    font-weight: 500;
+}
+
+.label-container span {
+    display: inline-block;
+    width: 158px;
+    margin-right: 16px;
+}
+
+span#Placed {
+    color: rgb(255, 127, 14);
+}
+
+span#Confirm {
+    color: rgb(148, 103, 189);
+}
+
+span#Deliver {
+    color: rgb(31, 119, 180);
+}
+
+#sum-order,
+#sum-revenue,
+span#Complete {
+    color: rgb(44, 160, 44);
+}
+
+span#Cancel {
+    color: rgb(214, 39, 40);
+}
+
+div.option {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+#chartType,
+#orderBy {
+    padding: 2px 8px;
+    margin-left: 4px;
+    margin-right: 65px;
+}

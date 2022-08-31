@@ -1,0 +1,335 @@
+.select-item {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.select-item input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border: 1px solid #b1b1b1;
+    border-radius: 4px
+}
+
+/* On mouse-over, add a grey background color */
+.select-item:hover input~.checkmark {
+    background-color: #ddd;
+}
+
+/* When the checkbox is checked, add a blue background */
+.select-item input:checked~.checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.select-item input:checked~.checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.select-item .checkmark:after {
+    box-sizing: unset;
+    left: 6px;
+    top: 2px;
+    width: 4px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+/* Amount input box */
+.amount-box {
+    display: flex;
+}
+
+.amount-box>* {
+    border: 1px solid #858585;
+}
+
+.amount-box span {
+    padding: 0 8px;
+}
+
+.amount-box span:hover {
+    background-color: rgba(147, 147, 147, 0.212);
+}
+
+.amount-box .decrease {
+    border-radius: 5px 0 0 5px;
+}
+
+.amount-box .increase {
+    border-radius: 0 5px 5px 0;
+}
+
+.amount-box input {
+    width: 40px;
+    text-align: center;
+    line-height: initial;
+}
+
+.amount-box i {
+    line-height: inherit;
+    color: rgb(3, 141, 3);
+}
+
+/* Modal dialog */
+#myModal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    padding-top: 180px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+#myModal .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+#myModal .icon {
+    height: 36px;
+    object-fit: contain;
+}
+
+#myModal .modal-content p {
+    margin: 20px 0;
+}
+
+#myModal .button-group {
+    text-align: right;
+}
+
+#myModal .action-button {
+    border-radius: 5px;
+    padding: 4px 12px;
+    border: 1px solid rgb(11, 116, 229);
+}
+
+#myModal .action-button#button-no {
+    background: rgb(11, 116, 229);
+    color: white;
+}
+
+#myModal .action-button#button-yes {
+    color: rgb(11, 116, 229);
+}
+
+#close-modal {
+    position: absolute;
+    display: inline;
+    left: 93.8%;
+    top: 2%;
+    font-size: 24px;
+    transition: ease 100ms;
+    width: fit-content;
+}
+
+#close-modal:hover {
+    color: red;
+}
+
+/* Modal notification dialog */
+#loadingModal,
+#notificationModal {
+    display: block;
+    position: fixed;
+    z-index: 11;
+    padding-top: 60px;
+    left: 0;
+    top: -1000px;
+    overflow: auto;
+    transition: ease 0.3s;
+}
+
+#notificationModal .modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 8px;
+    width: max-content;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 0 5px 1px #5e5c5cd1;
+}
+
+#notificationModal .icon {
+    height: 36px;
+    object-fit: contain;
+    margin-right: 8px;
+}
+
+/* Loading modal */
+
+#loadingModal .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 8px;
+    width: 250px;
+    height: 60px;
+    flex-direction: row;
+    align-items: center;
+    box-shadow: 0 0 5px 1px #5e5c5cd1;
+}
+
+.spinner-container {
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    text-align: center;
+}
+
+.spinner {
+    margin: auto;
+    border: 2px solid #dbf2ff;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    position: absolute;
+    top: 25%;
+    left: 43%;
+    border-radius: 50%;
+    border-right: 2px solid #0f6bb0;
+    text-align: center;
+    animation-name: spin;
+    animation-duration: 900ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67);
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    /*50% {width:24px;height:24px} /*shrinking effect*/
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    /*50% {width:24px;height:24px} /*shrinking effect*/
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+/* Rating bar */
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+/* body {
+    margin: 5%;
+    text-align: center;
+    background: #111;
+    color: #333;
+} */
+
+h1 {
+    font-size: 2em;
+    margin-bottom: .5rem;
+}
+
+/* Ratings widget */
+.rate {
+    display: inline-block;
+    border: 0;
+}
+
+/* Hide radio */
+.rate>input {
+    display: none;
+}
+
+/* Order correctly by floating highest to the right */
+.rate>label {
+    float: right;
+}
+
+/* The star of the show */
+.rate>label:before {
+    display: inline-block;
+    font-size: 28px;
+    padding: .3rem .2rem;
+    margin: 0;
+    cursor: pointer;
+    font-family: FontAwesome;
+    content: "\f005 ";
+    /* full star */
+}
+
+/* Half star trick */
+.rate .half:before {
+    content: "\f089 ";
+    /* half star no outline */
+    position: absolute;
+    padding-right: 0;
+}
+
+/* Click + hover color */
+.rate input:checked~label,
+/* color current and previous stars on checked */
+.rate label:hover,
+.rate label:hover~label {
+    color: gold;
+}
+
+/* color previous stars on hover */
+
+/* Hover highlights */
+.rate input:checked+label:hover,
+.rate input:checked~label:hover,
+/* highlight current and previous stars */
+.rate input:checked~label:hover~label,
+/* highlight previous selected stars for new rating */
+.rate label:hover~input:checked~label
+
+/* highlight previous selected stars */
+    {
+    color: rgb(183, 234, 0);
+}

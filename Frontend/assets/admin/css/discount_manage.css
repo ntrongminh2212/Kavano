@@ -1,0 +1,207 @@
+body {
+    background-color: #f4f4f4 !important;
+}
+
+#coupons-main {
+    border-top: 58px solid transparent;
+}
+
+#coupons-containers {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    font-size: 15px;
+    box-shadow: 2px 2px 3px 1px #acacac;
+}
+
+#coupons-containers td,
+#coupons-containers th {
+    border: 1px solid #868686;
+    text-align: left;
+    padding: 8px;
+    text-align: center;
+}
+
+
+#span-th th {
+    border-bottom: unset;
+}
+
+#coupons-containers #tblheader th {
+    text-transform: capitalize;
+    font-weight: 600;
+    border-top: unset;
+    transform: translateY(-46%);
+}
+
+#coupons-containers #tblheader .valid_time {
+    transform: unset
+}
+
+#span-th,
+#tblheader {
+    background: #d7dafa
+}
+
+td.description {
+    max-width: 400px;
+    /* word-wrap: break-word; */
+    overflow-wrap: break-word;
+}
+
+.tool i {
+    border: 1px solid gray;
+    padding: 4px;
+    width: 24px;
+    text-align: center;
+    color: gray;
+    background: #f0f0f0 !important;
+    cursor: pointer;
+}
+
+.tool i.update-coupon:hover {
+    color: #0061ff;
+    border: 1px solid #0061ff;
+    background-color: white !important;
+}
+
+.tool i.delete-coupon:hover {
+    color: red;
+    border: 1px solid red;
+    background-color: white !important;
+}
+
+#update-coupon-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 130px;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#update-coupon-modal .modal-content {
+    background-color: #fefefe;
+    text-align: center;
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 43%;
+}
+
+#update-coupon-modal #send-update-coupon {
+    border-radius: 5px;
+    width: 32%;
+    border: 1px solid rgb(11, 116, 229);
+    color: white;
+    font-weight: 500;
+    background-color: rgb(11, 116, 229);
+    padding: 6px 0;
+    margin-top: 12px;
+}
+
+#close-modal {
+    position: absolute;
+    right: 3%;
+    top: 2%;
+    font-size: 22px;
+}
+
+#close-modal:hover {
+    color: red;
+}
+
+form {
+    width: 100%;
+}
+
+.form-group {
+    position: relative;
+    text-align: left;
+    padding: 8px 4px;
+    align-items: center;
+}
+
+.form-group input {
+    height: 40px;
+}
+
+
+.form-group .form-label {
+    word-wrap: normal;
+    margin-right: 4px;
+}
+
+input.valid_time {
+    width: 160px !important;
+}
+
+input#value {
+    width: 75%;
+}
+
+input#value+span {
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    right: 18%;
+}
+
+.form-control:hover {
+    border-color: #1dbfaf;
+}
+
+.form-group.invalid .form-control {
+    border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+    color: #f33a58;
+}
+
+.form-message {
+    font-size: 13px;
+    padding: 4px 0;
+}
+
+#generate-code {
+    display: none;
+    position: absolute;
+    right: 3%;
+    top: 51%;
+    font-size: 14px;
+    padding: 2px 4px;
+}
+
+#option-create-tool {
+    float: right;
+}
+
+#newdiscount {
+    display: inline-block;
+    background: #14cc14;
+    padding: 5px 6px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 8px;
+}
+
+#newdiscount:hover {
+    background: #0f9e0f;
+}
+
+#newdiscount i {
+    color: white;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    border-radius: inherit;
+}

@@ -1,0 +1,141 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/search-results.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <!-- Icon -->
+    <link rel="stylesheet" href="../font/themify-icons/themify-icons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/a44f840e5f.js" crossorigin="anonymous"></script>
+
+    <title>Kết quả tìm kiếm</title>
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="header">
+        <a href="./home.html"><img src="../img/logo.png" class="logo"></a>
+        <div class="searchbox">
+            <i id="ti-search" class="ti-search"></i>
+            <form action="./search-results.html" method="GET" id="searchform">
+                <input id="searchbar" name="searchbar" type="text" placeholder="Tìm kiếm sản phẩm..."
+                    autocomplete="off">
+            </form>
+            <div id="search-results">
+
+            </div>
+        </div>
+
+        <div class="actionbar">
+            <i id="mycart" class="ti-shopping-cart">
+                <span id="cartamount">3</span>
+            </i>
+            <i id="notification" class="ti-bell"></i>
+            <div id="user" href="#">
+                <img src="../img/avatar.png" alt="" id="avatar">
+                <ul id="more-option">
+                    <li><i class="fa-solid fa-truck-fast" style="color: #256cc0;"></i>
+                        <a id="abc" href="./my-orders.html"> Đơn hàng của bạn</a>
+                    </li>
+                    <li id="logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: crimson;"></i>
+                        Đăng xuất</li>
+                </ul>
+            </div>
+            <a id="login" href="./login.html">Đăng nhập</a>
+        </div>
+    </section>
+
+    <section id="filter" class="mx-auto">
+        <div class="container-fluid p-3">
+            <h5 class="title py-2">Bộ lọc:</h5>
+            <h6 class="title">Giới tính: </h6>
+            <ul id="list-sex" class="px-2">
+                <li>
+                    <input type="radio" name="sex" id="all" value="-1" checked>
+                    <label for="all">Tất cả</label>
+                </li>
+                <li>
+                    <input type="radio" name="sex" id="female" value="0">
+                    <label for="female">Nữ</label>
+                </li>
+                <li>
+                    <input type="radio" name="sex" id="male" value="1">
+                    <label for="male">Nam</label>
+                </li>
+            </ul>
+
+            <h6 class="title">Danh mục: </h6>
+            <ul id="list-categories" class="px-2">
+                <li>
+                    <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+                <li> <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+            </ul>
+
+            <h6 class="title">Thương hiệu: </h6>
+            <ul id="list-brands" class="px-2">
+                <li>
+                    <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+                <li>
+                    <input type="checkbox" name="1" id="1" value="Giày dép">
+                    <label for="1">Giày dép</label>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="results" class="mx-auto">
+        <div id="results-header" class="container-fluid p-3">
+            <h4 id="searchstr" class="title">Không tìm thấy sản phẩm nào phù hợp</h4>
+            <select required id="sortby" title="Sắp xếp theo" onchange="sortProducts('#sortby')">
+                <option value="nameAsc">Tên A-Z</option>
+                <option value="nameDesc">Tên Z-A</option>
+                <option value="priceAsc">Giá tăng dần</option>
+                <option value="priceDesc">Giá giảm dần</option>
+            </select>
+        </div>
+        <div id="product-container" class="product-list mx-auto container-fluid">
+
+        </div>
+        <button id="loadmore" class="container text-center mt-5 px-2 py-1" onclick="loadMore('#product-container')">
+            Xem thêm <i class="icon-solid icon-sort-down"></i>
+        </button>
+    </section>
+    <script src="../scripts/lib/globalfunc.js"></script>
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/api/product.js"></script>
+    <script src="../scripts/renderer.js"></script>
+    <script src="../scripts/search-results.js"></script>
+</body>
+
+</html>

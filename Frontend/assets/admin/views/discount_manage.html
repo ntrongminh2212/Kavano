@@ -1,0 +1,205 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/custom-element.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+    <link rel="stylesheet" href="../css/discount_manage.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <!-- Icon -->
+    <link rel="stylesheet" href="../font/themify-icons/themify-icons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a44f840e5f.js" crossorigin="anonymous"></script>
+
+    <title>Quản lý phiếu giảm giá</title>
+</head>
+
+<body>
+    <section id="header">
+        <div class="wrapper">
+            <input type="checkbox" id="btn" hidden>
+            <label for="btn" class="menu-btn">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-times"></i>
+            </label>
+            <nav id="sidebar">
+                <div class="title">Quản Trị</div>
+                <ul class="list-items">
+                    <li><a href="./orders_manage.html"><i class="fa-solid fa-boxes-stacked"></i>Đơn hàng</a></li>
+                    <li><a href="./products_manage.html"><i class="fa-solid fa-shirt"></i>Sản phẩm</a></li>
+                    <li><a href="./discount_manage.html"><i class="fa-solid fa-tags"></i>Khuyến mãi</a></li>
+                    <li><a href="./statistic.html"><i class="fa-solid fa-chart-line"></i>Thống kê</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="searchbox">
+            <i id="ti-search" class="ti-search"></i>
+            <form action="./search-results.html" method="GET" id="searchform">
+                <input autocomplete="off" id="searchbar" name="searchbar" type="text" placeholder="Tìm kiếm sản phẩm..."
+                    autocomplete="off">
+            </form>
+            <div id="search-results">
+
+            </div>
+        </div>
+
+        <div class="actionbar">
+            <i id="notification" class="ti-bell"></i>
+            <a id="user" href="#"><img src="" alt="" id="avatar"></a>
+            <a id="login" href="./login.html">Đăng nhập</a>
+        </div>
+    </section>
+    <section id="coupons-main" class="container p-4 mb-4">
+        <h4>Quản lý phiếu giảm giá</h4>
+        <div id="option-create-tool" class="mb-3">
+            <a id="newdiscount" onclick="renderCreateCouponModal()" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                title="Tạo phiếu giảm giá"><i class="fa-solid fa-plus"></i></a>
+        </div>
+        <table id="coupons-containers">
+            <tr id="span-th">
+                <th></th>
+                <th></th>
+                <th></th>
+                <th colspan="2" style="border-bottom: 1px solid #636363;">Thời gian hiệu lực</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr id="tblheader">
+                <th>Mã Giảm Giá</th>
+                <th>nội dung</th>
+                <th>giá trị giảm</th>
+                <th class="valid_time">Từ ngày</th>
+                <th class="valid_time">Đến ngày</th>
+                <th>Điều kiện kích hoạt</th>
+                <th>Hiệu lực</th>
+                <th>Chỉnh sửa</th>
+            </tr>
+            <tr>
+                <!-- discount_code,description, value, valid_from, valid_until, condition_by -->
+                <td class="discount_code"></td>
+                <td class="description"></td>
+                <td class="value"></td>
+                <td class="valid_from"></td>
+                <td class="valid_until"></td>
+                <td class="condition_by"></td>
+                <td class="isvalid"></td>
+                <td class="tool">
+                    <i class="update-coupon fa-solid fa-pencil" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Sửa phiếu"></i>
+                    <i class="delete-coupon fa-solid fa-xmark" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        title="Xóa phiếu"></i>
+                </td>
+            </tr>
+        </table>
+    </section>
+    <section id="update-coupon-panel">
+        <div id="update-coupon-modal" class="modal">
+            <div class="modal-content">
+                <h5 id="content-tittle" class="mb-2"></h5>
+                <i id="close-modal" class="fa-solid fa-xmark"></i>
+                <form action="" id="update-coupon-form">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="discount_code" class="form-label">Mã giảm giá:</label>
+                                <input id="discount_code" name="discount_code" type="text" readonly
+                                    class="form-control">
+                                <button id="generate-code" type="button">Mã khác</button>
+                                <span class="form-message"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">Nội dung:</label>
+                                <textarea id="description" name="description" type="description"
+                                    placeholder="VD: Giảm 5% cho đơn hàng từ 1 triệu" class="form-control"
+                                    rows="5"></textarea>
+                                <span class="form-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="value" class="form-label">Giá trị:</label>
+                                <input id="value" name="value" type="number" min="1" max="100"
+                                    placeholder="Phần trăm giảm" class="form-control">
+                                <span>%</span>
+                                <span class="form-message"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="condition_by" class="form-label">Giá điều kiện:</label>
+                                <input id="condition_by" name="condition_by" type="number" min="1000" step="1000"
+                                    class="form-control">
+                                <span class="form-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="valid_from" class="form-label">Từ ngày:</label>
+                                <input id="valid_from" name="valid_from" type="date" placeholder="Nhập mật khẩu"
+                                    class="valid_time form-control"
+                                    onchange="validTimeOrder(this, document.querySelector('input#valid_until'))">
+                                <span class="form-message"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="valid_until" class="form-label">Đến ngày</label>
+                                <input id="valid_until" name="valid_until" type="date" placeholder="Nhập mật khẩu"
+                                    class="valid_time form-control"
+                                    onchange="validTimeOrder(document.querySelector('input#valid_from'),this)">
+                                <span class="form-message"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="send-update-coupon" type="submit" class="mt-3">Xác nhận sửa</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section id="dialog">
+
+    </section>
+    <script src="../scripts/lib/globalfunc.js"></script>
+    <script src="../scripts/api/user.js"></script>
+    <script src="../scripts/api/discount.js"></script>
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/api/product.js"></script>
+    <script src="../scripts/lib/validator.js"></script>
+    <script src="../scripts/discount_manage.js"></script>
+    <script src="../scripts/renderer.js"></script>
+    <script>
+        Validator({
+            form: '#update-coupon-form',
+            requirements: [
+                Validator.isRequired('#value', 'Giá trị giảm không được bỏ trống'),
+                Validator.isRequired('#condition_by', 'Giá điều kiện không được bỏ trống'),
+                Validator.isRequired('#valid_from', 'Ngày bắt đầu hiệu lực không được bỏ trống'),
+                Validator.isRequired('#valid_until', 'Ngày kết thúc hiệu lực không được bỏ trống'),
+                Validator.isRequired('#description', 'Nội dung mô tả không được bỏ trống')
+            ],
+            onSubmit: function (data) {
+                let button = document.querySelector('#generate-code');
+                if (button.style.display === 'none') {
+                    updateCouponAction(data);
+                } else {
+                    createCouponAction(data);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

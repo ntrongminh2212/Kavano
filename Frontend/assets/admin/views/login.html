@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="../scripts/lib/globalfunc.js"></script>
+    <script src="../scripts/api/user.js"></script>
+    <script>
+        async function verify() {
+            if (await adminVerify()) {
+                window.location.href = "./orders_manage.html";
+            }
+        }
+        verify();
+    </script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/registry.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <!-- Icon -->
+    <link rel="stylesheet" href="../font/themify-icons/themify-icons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+
+    <style>
+        select:invalid {
+            color: gray;
+        }
+
+        #registry {
+            color: #1a73e8 !important;
+            cursor: pointer !important;
+        }
+
+        #registry:hover {
+            color: #e47911 !important;
+            text-decoration: underline !important;
+        }
+
+        #search-results h6 {
+            font-size: 15px;
+        }
+
+        #search-results .product-name {
+            transform: translateY(-142%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <section id="header">
+        <a href="#"><img src="../img/logo.png" class="logo"></a>
+    </section>
+
+    <div class="main">
+
+        <form action="" method="POST" class="form" id="form-1">
+            <h3 class="heading">Đăng nhập</h3>
+            <p class="desc">Chỉ dành cho quản trị viên kavano</p>
+
+            <div class="spacer"></div>
+
+            <div class="form-group">
+                <label for="username" class="form-label">Tài khoản</label>
+                <input id="username" name="username" type="text" placeholder="Email hoặc số điện thoại"
+                    class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Mật khẩu</label>
+                <input id="password" name="password" type="password" placeholder="Nhập mật khẩu" class="form-control">
+                <span class="form-message"></span>
+            </div>
+
+            <button class="form-submit">Đăng nhập</button>
+        </form>
+    </div>
+    <script src="../scripts/lib/validator.js"></script>
+    <script src="../scripts/renderer.js"></script>
+    <script>
+        Validator({
+            form: '#form-1',
+            requirements: [
+                Validator.isRequired('#password', 'Mật khẩu không được bỏ trống'),
+                Validator.isUsername('#username'),
+            ],
+            onSubmit: function (data) {
+                login(JSON.stringify(data));
+            }
+        });
+    </script>
+</body>
+
+</html>

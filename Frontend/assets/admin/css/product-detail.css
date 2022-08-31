@@ -1,0 +1,358 @@
+a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+button.form-submit {
+    font-size: 14px;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    /* background-color: #1d1d1d; */
+    color: aliceblue;
+    padding: 9px 12px;
+    /* cursor: pointer; */
+    text-transform: uppercase;
+    transition: 0.3s all;
+    background: #1cbf31;
+    opacity: 1;
+    margin-bottom: 40px;
+    margin-right: 24px;
+}
+
+button.form-submit i {
+    font-size: 20px;
+}
+
+button.form-submit:hover {
+    background-color: #039103;
+}
+
+button:hover {
+    background-color: #c7c3c2;
+}
+
+#product-detail {
+    border-top: 58px solid white;
+}
+
+.breadcrumb {
+    color: gray;
+    font-size: large;
+}
+
+.img-fluid {
+    object-fit: cover;
+    width: 75% !important;
+}
+
+#main-img {
+    height: 500px;
+    width: 500px !important;
+    border: 2px solid #eeeeee;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.images-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.small-img {
+    padding: 2px;
+}
+
+#product-detail h6 {
+    color: #9d9d9d;
+}
+
+h3,
+h2,
+h4 {
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+#product-detail h2 {
+    color: #039103;
+}
+
+.form-group select {
+    display: block;
+    padding: 5px 10px;
+    width: 200px;
+    height: 40px;
+    margin-right: 12px;
+    appearance: auto;
+}
+
+#product-detail input {
+    padding-left: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#product-detail input:hover {
+    outline: none;
+}
+
+.rating {
+    display: block;
+}
+
+.rating i::before {
+    font-size: 20px;
+    padding: 1px;
+}
+
+i.icon-star {
+    display: inline-block;
+}
+
+i.icon-star-half {
+    position: absolute;
+}
+
+.rating i.star-half {
+    content: "\f089";
+}
+
+ul {
+    padding: 0;
+}
+
+ul .review {
+    padding: 20px 0;
+    border-top: 1px solid #9d9d9d70;
+}
+
+ul .review .user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin-right: 4px;
+    object-fit: cover;
+}
+
+ul .review .comment {
+    max-width: 36vw;
+}
+
+ul .review .reviewat {
+    color: gray;
+}
+
+.form-control {
+    width: 20px;
+}
+
+.form-group {
+    display: flex;
+    position: relative;
+}
+
+.form-control:hover {
+    border-color: #1dbfaf;
+}
+
+.form-group.invalid .form-control {
+    border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+    color: #f33a58;
+}
+
+.form-message {
+    font-size: 0.9rem;
+    line-height: 1.6rem;
+    padding: 4px 0 0;
+}
+
+textarea {
+    resize: none !important;
+}
+
+.form-group {
+    display: flex;
+    margin-bottom: 12px;
+    flex-direction: column;
+}
+
+.form-label,
+.form-message {
+    text-align: left;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+input.form-control {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
+    outline: none;
+    z-index: 1;
+}
+
+.form-group .combobox {
+    position: relative;
+    margin-right: 16px;
+    width: 210px;
+    height: 40px;
+}
+
+#brand {
+    width: 168px;
+    position: absolute;
+    bottom: 8px;
+    left: 5px;
+    outline: none;
+    border: none;
+}
+
+.combobox select {
+    position: absolute;
+    padding: 5px 10px;
+    height: 100%;
+    width: 100%;
+    appearance: auto;
+}
+
+#size-type {
+    width: 130px;
+    height: 35px;
+}
+
+#size-detail {
+    width: 335px;
+}
+
+#size-detail input {
+    width: 126px;
+    height: 35px;
+    border: none;
+    outline: none;
+    text-align: center;
+}
+
+#size-detail table {
+    width: 400px;
+}
+
+th,
+td {
+    border: 1px solid #dddd !important;
+    text-align: center !important;
+}
+
+th {
+    padding: 4px;
+}
+
+td>* {
+    margin: unset !important;
+}
+
+#product-images {
+    position: relative;
+}
+
+#selectimg-container {
+    position: absolute;
+}
+
+#selectimg-container {
+    position: absolute;
+    top: 1%;
+    left: 45%;
+    width: fit-content;
+}
+
+#selectimg-container label {
+    background-color: white;
+    cursor: pointer;
+    border: 1px solid #698489;
+    padding: 5px 12px;
+    border-radius: 14px;
+    color: #525e6c;
+    font-size: medium;
+    font-weight: 700;
+    transition: ease 100ms;
+}
+
+#selectimg-container label:hover {
+    background-color: #4d80b2;
+    color: white;
+}
+
+#selectimg {
+    display: none;
+}
+
+#remove-picture {
+    position: absolute;
+    display: inline;
+    left: 82.8%;
+    top: 1%;
+    font-size: 24px;
+    transition: ease 100ms;
+    width: fit-content;
+}
+
+#remove-picture:hover {
+    color: red;
+}
+
+input#price {
+    width: 300px;
+}
+
+.form-group.sex {
+    display: flex;
+    flex-direction: row;
+}
+
+.form-label.sex {
+    display: block;
+    text-align: center;
+    line-height: 40px;
+    font-weight: normal;
+    padding-bottom: 0;
+}
+
+.form-group.sex input {
+    width: 20px;
+    appearance: auto;
+}
+
+.addstock {
+    display: inline-block;
+    background: #14cc14;
+    padding: 4px 1px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+    /* line-height: 29px; */
+}
+
+
+.addstock:hover {
+    background: #0f9e0f;
+}
+
+.addstock i {
+    color: white;
+    font-size: 18px;
+    width: 17px;
+    height: 11px;
+    border-radius: inherit;
+}
+
+button#delete-product {
+    background: red;
+}

@@ -1,0 +1,228 @@
+a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+button#add-to-cart {
+    font-size: 0.8rem;
+    font-weight: 700;
+    outline: none;
+    border: none;
+    background-color: #1d1d1d;
+    color: aliceblue;
+    padding: 12px 28px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s all;
+    background: #fb774b;
+    opacity: 1;
+}
+
+textarea {
+    resize: none !important;
+}
+
+button#add-to-cart:hover {
+    background-color: #a35136;
+}
+
+#product-detail {
+    border-top: 58px solid white;
+}
+
+.breadcrumb {
+    color: gray;
+    font-size: large;
+}
+
+.img-fluid {
+    object-fit: cover;
+    width: 75% !important;
+}
+
+.images-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.small-img {
+    padding: 2px;
+}
+
+#product-detail h6 {
+    color: #9d9d9d;
+}
+
+h3,
+h2,
+h4 {
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+#product-detail h2 {
+    color: #039103;
+}
+
+#product-detail select {
+    display: block;
+    padding: 5px 10px;
+}
+
+#product-detail input {
+    width: 64px;
+    height: 40px;
+    padding-left: 10px;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+#product-detail input:hover {
+    outline: none;
+}
+
+.rating {
+    display: block;
+}
+
+.rating i::before {
+    font-size: 20px;
+    padding: 1px;
+}
+
+i.icon-star {
+    display: inline-block;
+}
+
+i.icon-star-half {
+    position: absolute;
+}
+
+.rating i.star-half {
+    content: "\f089";
+}
+
+ul {
+    padding: 0;
+}
+
+ul .review {
+    padding: 20px 0;
+    border-top: 1px solid #9d9d9d70;
+    transition: ease 700ms;
+    position: relative;
+}
+
+.review .review-action {
+    display: inline;
+    position: absolute;
+    left: 95%;
+}
+
+.review-action i {
+    border: 1px solid gray;
+    padding: 4px;
+    width: 24px;
+    text-align: center;
+    color: gray;
+    background: #f0f0f0 !important;
+    cursor: pointer;
+}
+
+.review-action i.update-review:hover {
+    color: #0061ff;
+    border: 1px solid #0061ff;
+    background-color: white !important;
+}
+
+.review-action i.delete-review:hover {
+    color: red;
+    border: 1px solid red;
+    background-color: white !important;
+}
+
+ul .review * {
+    background: unset;
+}
+
+ul .review .user-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    margin-right: 4px;
+    object-fit: cover;
+}
+
+ul .review .comment {
+    max-width: 36vw;
+}
+
+ul .review .reviewat {
+    color: gray;
+}
+
+.form-control {
+    width: 20px;
+}
+
+.form-group {
+    display: flex;
+}
+
+.form-group.invalid .form-control {
+    border-color: goldenrod;
+}
+
+.form-group.invalid .form-message {
+    color: goldenrod;
+}
+
+.form-message {
+    font-size: 0.9rem;
+    line-height: 1.6rem;
+    padding: 4px 0 0;
+}
+
+/* Modal review panel */
+#review-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 180px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#review-modal .modal-content {
+    background-color: #fefefe;
+    text-align: center;
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+    align-items: center;
+}
+
+#review-modal img {
+    width: 24%;
+}
+
+#review-modal #send-review {
+    border-radius: 5px;
+    padding: 4px 12px;
+    border: 1px solid rgb(11, 116, 229);
+}
+
+#review-modal #send-review {
+    color: rgb(11, 116, 229);
+}
+
+#dialog * {
+    background: unset;
+}

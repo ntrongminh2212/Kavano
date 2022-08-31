@@ -1,0 +1,231 @@
+body {
+    background: #f1f1f1 !important;
+}
+
+#main {
+    display: block;
+    background: #f1f1f1;
+    height: 100%;
+}
+
+#statusTab {
+    background: white;
+    border-radius: 5px;
+}
+
+.nav-link {
+    color: #337ab7 !important;
+}
+
+.nav-link.active {
+    color: white !important;
+    background-color: #337ab7 !important;
+}
+
+.cart-item,
+#detail,
+.coupon,
+#table-column {
+    background-color: white;
+    border-bottom: 1px solid #babfbf;
+    align-items: center;
+}
+
+.item-propety {
+    display: flex;
+    font-size: medium;
+    justify-content: center;
+    align-self: center;
+    padding: 4px 10px !important;
+}
+
+.cart-item img {
+    object-fit: cover;
+    width: 80px;
+    height: 80px;
+}
+
+.cart-item .product-name {
+    align-self: center;
+    width: 100%;
+}
+
+.item-total {
+    color: green;
+    font-weight: 500;
+}
+
+#price {
+    color: black;
+    font-weight: 500;
+}
+
+#table-column {
+    font-weight: 500;
+    position: relative;
+}
+
+a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.row {
+    --bs-gutter-x: unset !important;
+}
+
+
+#cal-total {
+    font-size: 17px;
+}
+
+span.title {
+    color: rgb(116, 115, 115);
+    margin-right: 16px;
+}
+
+.coupon .propety,
+#detail .propety {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.order {
+    margin: 16px 0;
+}
+
+.order-id {
+    height: 45px;
+    background-color: #ffffff;
+    color: rgb(84 84 84);
+    padding: 0 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #7a7a7a;
+    border-bottom: unset;
+}
+
+.order-id:hover {
+    background: #eeedf5;
+}
+
+.order-detail {
+    overflow: hidden;
+    transition: 0.2s ease-out;
+}
+
+.order-id>* {
+    line-height: 45px;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.order-id i {
+    margin: 0 8px;
+}
+
+a.bttUptStatus {
+    display: inline-block;
+    cursor: pointer;
+    outline: 0;
+    border: 1px solid;
+    border-color: #c89411 #b0820f #99710d;
+    -moz-border-radius: 3px 3px 3px 3px;
+    border-radius: 3px 3px 3px 3px;
+    border-radius: 0\9;
+    -moz-box-shadow: inset 0 1px 0 0 #fcf3dc;
+    box-shadow: inset 0 1px 0 0 #fcf3dc;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF8E3AD', endColorstr='#FFEEBA37', GradientType=0);
+    background: -moz-linear-gradient(top, #f8e3ad, #EEBA37);
+    background: -webkit-linear-gradient(top, #f8e3ad, #EEBA37);
+    background: -o-linear-gradient(top, #f8e3ad, #EEBA37);
+    background: -ms-linear-gradient(top, #f8e3ad, #EEBA37);
+    text-align: center;
+    color: #111;
+    font-family: inherit;
+    line-height: 43px;
+    font-size: 15px;
+    width: 110px;
+    font-weight: 600;
+}
+
+a.bttUptStatus:hover {
+    background: #f1c65a;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FFF6DA95', endColorstr='#FFECB21F', GradientType=0);
+    background: linear-gradient(to bottom, #f6da95, #ecb21f);
+    background: -moz-linear-gradient(top, #f6da95, #ecb21f);
+    background: -webkit-linear-gradient(top, #f6da95, #ecb21f);
+    background: -o-linear-gradient(top, #f6da95, #ecb21f);
+    background: -ms-linear-gradient(top, #f6da95, #ecb21f);
+    text-decoration: none;
+}
+
+a.bttUptStatus:active {
+    background: #EEBA37;
+    -webkit-box-shadow: inset 0 1px 3px 0 #b0820f;
+    -moz-box-shadow: inset 0 1px 3px 0 #b0820f;
+    box-shadow: inset 0 1px 3px 0 #b0820f;
+}
+
+a.disable {
+    background: #f4f6f8f2;
+    color: #635f5f !important;
+    text-align: start;
+    font-family: inherit;
+    line-height: 43px;
+    font-size: 12px;
+    width: 110px;
+    font-weight: 600;
+    border: 1px solid #9b9797;
+    box-shadow: inset 0px 0px 6px 0 #706f6f;
+}
+
+a.complete {
+    font-size: 28px;
+    padding-left: 35px;
+    color: #1aba1a !important;
+    background: #d5ffd1;
+    border: 1px solid green;
+}
+
+#searchOrder {
+    border-radius: 2px;
+}
+
+#search-order {
+    height: 35px;
+    width: 100%;
+    background-color: white;
+    outline: none;
+    border: none;
+}
+
+.delete-item {
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: ease-in 50ms;
+}
+
+.delete-item {
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: ease-in 50ms;
+    position: absolute;
+    width: 35px !important;
+    right: 10px;
+}
+
+.delete-item:hover {
+    color: #e10909;
+}
+
+#cancel-nav.active {
+    background-color: #e61111 !important;
+    color: white !important;
+}
+
+#cancel-nav {
+    color: #e61111 !important;
+}
