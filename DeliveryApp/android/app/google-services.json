@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "2046591712",
+    "project_id": "chatkavano",
+    "storage_bucket": "chatkavano.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:2046591712:android:e5e0a8c3ef86e6a7a54685",
+        "android_client_info": {
+          "package_name": "com.anonymous.DeliveryApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "2046591712-ehiucc2pk2696u9fti1ooukojr82dmq3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBHotbN4NFdHsBgkjCirxv9aRchmBc8i8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "2046591712-ehiucc2pk2696u9fti1ooukojr82dmq3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
