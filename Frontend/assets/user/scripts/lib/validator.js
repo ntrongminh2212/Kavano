@@ -105,9 +105,12 @@ function Validator(options) {
 
             let divBirth = eForm.querySelector('div[id="birth"]')
             if (divBirth) {
-                const day = eForm.querySelector('select[id="birth_day"]').value;
-                const month = eForm.querySelector('select[id="birth_month"]').value;
-                const year = eForm.querySelector('select[id="birth_year"]').value;
+                let day = eForm.querySelector('select[id="birth_day"]').value;
+                let month = eForm.querySelector('select[id="birth_month"]').value;
+                let year = eForm.querySelector('select[id="birth_year"]').value;
+
+                day < 10 ? day = `0${day}` : 1;
+                month < 10 ? month = `0${month}` : 1;
                 data['dateOfBirth'] = `${year}-${month}-${day}`;
             }
             options.onSubmit(data);
@@ -189,6 +192,7 @@ Validator.isPasswordPass = function (selector, message) {
         }
     };
 }
+
 function handleError(selector, errMes) {
     const eInput = document.querySelector(`input[id="${selector}"]`);
     var eError = eInput.parentElement.querySelector('.form-message');

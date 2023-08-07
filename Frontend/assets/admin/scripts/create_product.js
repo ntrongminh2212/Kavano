@@ -59,7 +59,7 @@ function removeSelectedImage() {
     }
 }
 
-function createNewProduct(data) {
+async function createNewProduct(data) {
     console.log(data);
     var inputSizes = document.querySelectorAll('#sizes-stock input');
     if (lstImages.length > 0) {
@@ -81,7 +81,16 @@ function createNewProduct(data) {
         }
         console.log(newProduct);
         loadingDialog();
-        createNewProductAPI(JSON.stringify(newProduct));
+        const res = await createNewProductAPI(JSON.stringify(newProduct));
+        if (res.success) {
+            notificationDialog("success", "Tạo thành công sản phẩm mới");
+            setTimeout(() => {
+                window.open(`./product-detail.html?id=${res.product_id}`);
+            }, 1000);
+            refreshPage();
+        } else {
+            notificationDialog("failure", res.message);
+        }
     } else {
         alert('Sản phẩm phải có ảnh minh họa, hãy chọn ảnh!')
     }
@@ -143,4 +152,30 @@ async function renderBrandSelectBox(selector) {
         option.innerText = brand.name;
         selectBox.appendChild(option);
     });
+}
+
+function refreshPage() {
+    let allInputs = document.querySelectorAll("[name]");
+    Array.from(allInputs).forEach(input => {
+        switch (input.type) {
+            case 'text':
+                input.value = '';
+                break;
+            case 'number':
+                input.value = 0;
+                break;
+            case 'textarea':
+                input.value = '';
+                break;
+            case 'file':
+                input.value = '';
+                break
+            default:
+                break;
+        }
+    })
+
+    imagesGroup.innerHTML = "";
+    lstImages = [];
+    mainImg.src = "";
 }

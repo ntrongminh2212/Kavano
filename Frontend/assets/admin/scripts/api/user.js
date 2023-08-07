@@ -39,3 +39,55 @@ function adminVerify() {
             });
     }
 }
+
+function updateUserInfoAPI(data) {
+    const userToken = localStorage.getItem("adminToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/update-info", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+
+function changeAvatarAPI(data) {
+    const userToken = localStorage.getItem("adminToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/change-avatar", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+
+function changePasswordAPI(data) {
+    const userToken = localStorage.getItem("adminToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/change-password", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+

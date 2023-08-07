@@ -145,3 +145,25 @@ function turnOnToolTip() {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     })
 }
+
+async function connectWallet() {
+    if (typeof window.ethereum != "undefined") {
+        return ethereum
+            .request({ method: 'eth_requestAccounts' })
+            .then((res) => {
+                return true;
+            })
+            .catch((error) => {
+                if (error.code === 4001) {
+                    // EIP-1193 userRejectedRequest error
+                    alert('Để có thể thanh toán bằng ETH, vui lòng kết nối ví Metamask');
+                } else {
+                    console.error(error);
+                }
+                return false;
+            });
+    } else {
+        alert('Vui lòng tải ví Metamask');
+        return false;
+    }
+}

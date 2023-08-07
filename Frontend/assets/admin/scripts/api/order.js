@@ -29,6 +29,33 @@ function getOrders() {
     }
 }
 
+function getAllShipper() {
+    const adminToken = localStorage.getItem("adminToken");
+    if (adminToken) {
+        return fetch(serverURL + "/shipper/all", requestOption('GET', undefined, adminToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                if (res.success) {
+                    return res.shippers;
+                } else {
+                    window.location.href === 'http://127.0.0.1:5500/Frontend/assets/admin/views/login.html'
+                        ? 1 : window.location.href = './login.html';
+                    return false
+                }
+            })
+            .catch(err => {
+                window.location.href === 'http://127.0.0.1:5500/Frontend/assets/admin/views/login.html'
+                    ? 1 : window.location.href = './login.html';
+                return false;
+            });
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/admin/views/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
 
 function updateOrderStatus(order) {
     const adminToken = localStorage.getItem("adminToken");

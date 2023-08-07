@@ -4,6 +4,7 @@ let searchbox = document.querySelector(".searchbox");
 let elNotification = actionBar.querySelector('#notification');
 let elUser = actionBar.querySelector('#user');
 let elLogin = actionBar.querySelector('#login');
+let elLogout = actionBar.querySelector('#logout')
 setHeaderEventListener();
 setLoginStatus();
 
@@ -16,6 +17,9 @@ function setLoginStatus() {
 
         user = JSON.parse(localStorage.getItem("admin"));
         elUser.querySelector("img").src = user.avatar;
+        elUser.querySelector("img").onclick = function () {
+            window.location.href = "./personal-info.html"
+        }
     } else {
         elLogin.style.display = 'block';
         elNotification.style.display = 'none';
@@ -46,5 +50,9 @@ function setSearchEvent() {
 }
 
 function setActionBarEvent() {
-
+    elLogout.onclick = function (event) {
+        localStorage.removeItem("adminToken");
+        localStorage.removeItem("admin")
+        location.reload();
+    }
 }

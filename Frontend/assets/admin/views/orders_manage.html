@@ -51,7 +51,13 @@
 
     <div class="actionbar">
       <i id="notification" class="ti-bell"></i>
-      <a id="user" href="#"><img src="" alt="" id="avatar"></a>
+      <div id="user">
+        <img src="" alt="" id="avatar">
+        <ul id="more-option">
+          <li id="logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: crimson;"></i>
+            Đăng xuất</li>
+        </ul>
+      </div>
       <a id="login" href="./login.html">Đăng nhập</a>
     </div>
   </section>
@@ -65,6 +71,9 @@
         </li>
         <li class="nav-item">
           <a href="#confirm" class="nav-link" data-bs-toggle="tab">Đã xác nhận</a>
+        </li>
+        <li class="nav-item">
+          <a href="#assign" class="nav-link" data-bs-toggle="tab">Đã phân công</a>
         </li>
         <li class="nav-item">
           <a href="#deliver" class="nav-link" data-bs-toggle="tab">Đang vận chuyển</a>
@@ -89,6 +98,9 @@
 
         </div>
         <div class="tab-pane fade" id="confirm">
+
+        </div>
+        <div class="tab-pane fade" id="assign">
 
         </div>
         <div class="tab-pane fade" id="deliver">
@@ -191,6 +203,84 @@
         <div class="tab-pane fade" id="cancel">
 
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="assign-shipper-panel">
+    <div id="assign-shipper-modal" class="modal">
+      <div class="modal-content">
+        <h5 id="content-tittle" class="mb-2"> Phân công giao hàng </h5>
+        <i id="close-modal" class="fa-solid fa-xmark"></i>
+        <form action="" id="assign-shipper-form">
+          <div class="row">
+            <div class="col-6">
+              <div class="form-group">
+                <label for="shipper-id" class="form-label" style="margin-bottom: unset;">Mã người giao hàng: </label>
+                <i class="fa-solid fa-caret-down cbx-icon"></i>
+                <input id="shipper-id" name="shipper-id" type="text" class="form-control"
+                  style="height: unset; background-color: white;" readonly
+                  onfocusin="document.querySelector('#ulShipperIds').style.display = 'block'" onfocusout="setTimeout(() => {
+                        document.querySelector('#ulShipperIds').style.display = 'none';},250);" autocomplete="off">
+                <div class='absolute z-10 max-h-48 bg-gray-100 overflow-y-auto shadow'>
+                  <ul id="ulShipperIds" class='list-none' style="display: none;">
+                    <!-- <li class="row px-2 py-1 cursor-pointer bg-white hover:bg-blue-100" onclick="selectShipper(this)"
+                      style="align-items: center;">1</li> -->
+                  </ul>
+                </div>
+              </div class="form-group">
+
+              <div class="form-group">
+                <span class="form-label">Tên:</span>
+                <i class="fa-solid fa-caret-down cbx-icon"></i>
+                <input id="shipper-name" name="shipper-name" type="text" class="form-control"
+                  style="height: unset; background-color: white;" readonly
+                  onfocusin="document.querySelector('#ulShipperNames').style.display = 'block'" onfocusout="setTimeout(() => {
+                        document.querySelector('#ulShipperNames').style.display = 'none';},250);" autocomplete="off">
+                <div class='absolute z-10 max-h-48 bg-gray-100 overflow-y-auto shadow'>
+                  <ul id="ulShipperNames" class='list-none' style="display: none;">
+                    <!-- <li class="row px-2 py-1 cursor-pointer bg-white hover:bg-blue-100" onclick="selectShipper(this)"
+                      style="align-items: center;">1</li> -->
+                  </ul>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Email:</span>
+                <span id="shipper-email" class="form-control">shipperkavano1@gmail.com</span>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <span class="form-label">Số điện thoại:</span>
+                <span id="shipper-phone" class="form-control">0123456789</span>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Ngày sinh:</span>
+                <span id="shipper-birth" class="form-control">22/12/2000</span>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Đang được phân công:</span>
+                <span id="assign-count" class="form-control" style="border:unset;font-weight: 500;"></span>
+              </div>
+            </div>
+          </div>
+          <div class="order">
+            <div class="id">
+              <span class="tittle">Đơn hàng:</span>
+              <span class="value"></span>
+            </div>
+            <div class="location">
+              <span class="tittle">Giao tới:</span>
+              <span class="value"></span>
+            </div>
+          </div>
+          <button id="send-assign-shipper" type="button" class="mt-3">Xác nhận phân
+            công</button>
+        </form>
       </div>
     </div>
   </section>

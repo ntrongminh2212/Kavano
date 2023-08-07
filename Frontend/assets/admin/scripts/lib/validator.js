@@ -184,6 +184,15 @@ Validator.isPasswordConfirm = function (selector, getPassword) {
     }
 }
 
+Validator.isPasswordPass = function (selector, message) {
+    return {
+        inputId: selector,
+        check: function (value) {
+            return (value.length > 5) ? undefined : message || 'Mật khẩu phải nhiều hơn 5 ký tự';
+        }
+    };
+}
+
 function handleError(selector, errMes) {
     const eInput = document.querySelector(`input[id="${selector}"]`);
     var eError = eInput.parentElement.querySelector('.form-message');

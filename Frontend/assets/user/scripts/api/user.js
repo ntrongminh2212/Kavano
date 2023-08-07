@@ -29,6 +29,7 @@ function login(data) {
             if (res.success) {
                 localStorage.setItem("userToken", res.userToken);
                 localStorage.setItem("user", JSON.stringify(res.user));
+                const account = JSON.parse(data);
                 if (document.referrer) {
                     history.back(-1);
                 } else {
@@ -49,6 +50,7 @@ function getUserAdressAPI() {
             })
             .then(res => {
                 if (res.success) {
+                    // console.log(res.addresses);
                     return res.addresses;
                 }
             })
@@ -92,3 +94,55 @@ function deleteUserAdressAPI(data) {
         return false
     }
 }
+
+function updateUserInfoAPI(data) {
+    const userToken = localStorage.getItem("userToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/update-info", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+
+function changeAvatarAPI(data) {
+    const userToken = localStorage.getItem("userToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/change-avatar", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+
+function changePasswordAPI(data) {
+    const userToken = localStorage.getItem("userToken");
+    if (userToken) {
+        return fetch(usersRouteURL + "/change-password", requestOption('PUT', data, userToken))
+            .then(res => {
+                return res.json();
+            })
+            .then(res => {
+                return res;
+            })
+    } else {
+        window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'
+            ? 1 : window.location.href = './login.html';
+        return false
+    }
+}
+

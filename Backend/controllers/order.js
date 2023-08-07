@@ -1,5 +1,8 @@
 import { db } from "../index.js";
-import { isOverStock, queryDeleteCartItem } from '../controllers/cart.js';
+import { deleteCartItem, isOverStock, queryDeleteCartItem } from '../controllers/cart.js';
+import { firebaseDb, firebaseDbRef, firebaseRemove, firebaseSet } from "../firebase/firebase.js";
+import { KavanoOrders } from "../kavanoorder.js";
+import { ethers } from "ethers";
 
 export function mysqlDateFormat(date = new Date()) {
     try {
@@ -16,11 +19,13 @@ export function mysqlDateFormat(date = new Date()) {
 }
 
 function queryGetOrders(user) {
-    let sql = 'SELECT order_id,user.user_id,user.name,user.email,user.phone,total, address, status, place_time,`confirm_time`,`deliver_time`, `complete_time`,`cancel_time`, `order`.`discount_code`, discount.value as discount_value '
-        + 'FROM `order` LEFT JOIN discount ON `order`.discount_code = discount.discount_code , user '
+    let sql = 'SELECT order_id,user.user_id,user.name,user.email,user.phone,user.avatar,total, address, status, place_time,`confirm_time`,`assign_time`,`deliver_time`, `complete_time`,`cancel_time`, '
+        + '`order`.`discount_code`, discount.value as discount_value,payment_method,eth_pay, shipper.shipper_id, shipper.name as shipper_name, shipper.avatar as shipper_avatar '
+        + 'FROM `order` LEFT JOIN discount ON `order`.discount_code = discount.discount_code , user, shipper '
         + 'WHERE `order`.user_id = user.user_id '
+        + 'AND `order`.shipper_id = shipper.shipper_id '
         + ((user.authority === 'user') ? ('AND `order`.user_id = ' + `${user.user_id}`) : '')
-        + ' ORDER BY cancel_time DESC, complete_time DESC, deliver_time DESC, confirm_time DESC, place_time DESC';
+        + ' ORDER BY cancel_time DESC, complete_time DESC, deliver_time DESC, assign_time DESC, confirm_time DESC, place_time DESC';
 
     return new Promise((resolve, reject) => {
         db.query(sql, (err, orders) => {
@@ -55,7 +60,7 @@ function queryReviewById(user_id, product_id) {
     })
 }
 
-function queryGetOrderDetail(order) {
+export function queryGetOrderDetail(order, getReview = true) {
     let sql = `SELECT product.product_id,order_detail.size_name, product.name, price, amount, total,sex, img.image_url  
     FROM order_detail, product,(SELECT * FROM product_image GROUP BY product_id) AS img, product_detail 
     WHERE order_id = '${order.order_id}' 
@@ -67,11 +72,14 @@ function queryGetOrderDetail(order) {
     return new Promise((resolve, reject) => {
         db.query(sql, async (err, results) => {
             if (!err) {
-                var pmOrder_details = results.map(async item => {
-                    item['user_review'] = await queryReviewById(order.user_id, item.product_id);
-                    return item
-                })
-                order['order_detail'] = await Promise.all(pmOrder_details);
+                // var pmOrder_details = 
+                if (getReview) {
+                    for (let item of results) {
+                        item['user_review'] = await queryReviewById(order.user_id, item.product_id);
+                    }
+                    await Promise.all(results.map(item => { return item['user_review'] }))
+                }
+                order['order_detail'] = results;
                 resolve(order);
             } else {
                 console.log(err);
@@ -82,7 +90,14 @@ function queryGetOrderDetail(order) {
 }
 
 export function queryGetOrderById(order_id) {
-    const sql = "SELECT * FROM `order` WHERE order_id = '" + order_id + "'";
+    const sql = 'SELECT order_id,user.user_id,user.name,user.email,user.phone,user.avatar AS user_avatar, '
+        + 'shipper.shipper_id,shipper.name, shipper.avatar AS shipper_avatar,total, address,coordinate, status, '
+        + 'place_time,`confirm_time`,`deliver_time`, `complete_time`,`cancel_time`, `order`.`discount_code`, `payment_method` '
+        + 'FROM `order`, user, shipper '
+        + `WHERE order_id = '${order_id}' `
+        + 'AND `order`.`user_id` = user.user_id '
+        + 'AND `order`.`shipper_id` = shipper.shipper_id '
+
     return new Promise((resolve, reject) => {
         db.query(sql, (err, order) => {
             if (!err) {
@@ -95,8 +110,8 @@ export function queryGetOrderById(order_id) {
     })
 }
 
-export async function queryUpdateOrderStatus(req, res, order_id, uptStatus, time = ' ') {
-    const updateStatus = "UPDATE `order` SET `status`= '" + uptStatus + "'" + time
+export async function queryUpdateOrderStatus(req, res, order_id, uptStatus, time = ' ', shipper_id = ' ') {
+    const updateStatus = "UPDATE `order` SET `status`= '" + uptStatus + "'" + time + shipper_id
         + ` WHERE order_id = '${order_id}'`
 
     db.query(updateStatus, (err, rs) => {
@@ -109,7 +124,7 @@ export async function queryUpdateOrderStatus(req, res, order_id, uptStatus, time
         } else {
             console.log(err);
             res.json({
-                success: 400,
+                error: 400,
                 message: err.message
             });
         }
@@ -152,7 +167,7 @@ function queryInsertOrderDetail(orderdetails) {
 }
 
 function queryInsertOrder(order) {
-    const generate_key_sql = 'SELECT CONVERT(UUID_SHORT(),VARCHAR(17)) AS _KEY';
+    const generate_key_sql = 'SELECT CONVERT(UUID(),VARCHAR(25)) AS _KEY';
     const insertOrder = 'INSERT INTO `order` SET ?'
     const pmQuery = new Promise((resolve, reject) => {
         db.query(generate_key_sql, (err, key) => {
@@ -169,6 +184,7 @@ function queryInsertOrder(order) {
                 if (!err) {
                     resolve(order['order_id']);
                 } else {
+                    console.log(err.message);
                     resolve(err.message);
                 }
             });
@@ -177,6 +193,29 @@ function queryInsertOrder(order) {
         console.log(reason);
     })
     return pmQuery;
+}
+
+function queryShipperMinOrders() {
+    const sql = 'SELECT `shipper`.`shipper_id`, (SELECT COUNT(shipper_id) FROM `order` '
+        + "WHERE (`status` = 'Deliver' OR `status` = 'Assign') "
+        + "AND shipper.shipper_id = shipper_id) AS orders_count "
+        + 'FROM shipper '
+        + 'ORDER BY orders_count ASC '
+        + 'LIMIT 1'
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, (err, rs) => {
+            if (!err) {
+                if (rs.length !== 0) {
+                    resolve(rs[0].shipper_id);
+                } else {
+                    resolve(false);
+                }
+            } else {
+                reject(err);
+            }
+        })
+    });
 }
 
 export function updateStock(product_detail) {
@@ -199,6 +238,7 @@ export function updateStock(product_detail) {
 export const getOrders = async (req, res) => {
     const user = req.user;
     let orders = await queryGetOrders(user);
+
     let pmOrders = orders.map(order => {
         return queryGetOrderDetail(order);
     })
@@ -216,6 +256,7 @@ export const createOrder = async (req, res) => {
     const orderitems = req.body.orderitems;
     let discount = req.body.discount;
     const address = req.body.address;
+    const coordinate = req.body.coordinate;
     if (orderitems && orderitems.length > 0) {
         let Total = 0;
         let upt_product_detail = [];
@@ -244,6 +285,7 @@ export const createOrder = async (req, res) => {
                         })
                         Total += Number(orderitem.amount) * Number(orderitem.price);
                     } else {
+                        console.log('Khong du so luong ton');
                         reject('Số lượng tồn không đủ');
                     }
                     resolve({
@@ -267,12 +309,15 @@ export const createOrder = async (req, res) => {
         }).then(async (value) => {
             // insert order, order_detail
             // update decrease stock
+            const shipper_id = await queryShipperMinOrders();
             let order = {
                 user_id: user_id,
                 total: Total,
                 address: address,
+                coordinate: JSON.stringify(coordinate),
                 place_time: new Date(),
-                discount_code: discount ? discount.discount_code : null
+                discount_code: discount ? discount.discount_code : null,
+                shipper_id: shipper_id
             }
             const order_id = await queryInsertOrder(order);
             //`order_id`, `product_id`, `size_name`, `amount`, `total`
@@ -283,11 +328,126 @@ export const createOrder = async (req, res) => {
             var pmUpdateStock = upt_product_detail.map(detail => {
                 return updateStock(detail);
             })
+            await queryDeleteCartItem(orderitems, user_id);
             await Promise.all(pmUpdateStock);
             res.json({
                 success: "202",
                 order_id: order_id
             })
+        }).catch(async reason => {
+            const productStocks = await Promise.all(pmProductStocks)
+            return res.json({ error: 400, reason, productStocks });
+        })
+        pmCreateOrder;
+    } else {
+        res.status(400);
+    }
+}
+
+export const createCryptoOrder = (req, res) => {
+    const user_id = req.user.user_id;
+    const orderitems = req.body.orderitems;
+    let discount = req.body.discount;
+    const address = req.body.address;
+    const coordinate = req.body.coordinate;
+    if (orderitems && orderitems.length > 0) {
+        let Total = 0;
+        let upt_product_detail = [];
+        let order_details = [];
+        let pmProductStocks = orderitems.map((orderitem) => {
+            return new Promise(async (resolve, reject) => {
+                resolve({
+                    product_id: orderitem.product_id,
+                    size_name: orderitem.size_name,
+                    stock: await isOverStock(orderitem, 0)
+                })
+            })
+        });
+        let pmCreateOrder = new Promise(async (resolve, reject) => {
+            // check product stock and return future decrease stock
+            // calc no-discount total
+            let pmUpt_product_detail = orderitems.map(async (orderitem) => {
+                let stock = await isOverStock(orderitem, orderitem.amount);
+                return new Promise((resolve, reject) => {
+                    if (stock) {
+                        order_details.push({
+                            product_id: orderitem.product_id,
+                            size_name: orderitem.size_name,
+                            amount: orderitem.amount,
+                            total: Number(orderitem.amount) * Number(orderitem.price)
+                        })
+                        Total += Number(orderitem.amount) * Number(orderitem.price);
+                    } else {
+                        console.log('Khong du so luong ton');
+                        reject('Số lượng tồn không đủ');
+                    }
+                    resolve({
+                        product_id: orderitem.product_id,
+                        size_name: orderitem.size_name,
+                        update_stock: (stock - Number(orderitem.amount))
+                    })
+                })
+            });
+
+            upt_product_detail = await Promise.all(pmUpt_product_detail).catch(reason => reject(reason));
+            resolve(upt_product_detail);
+        }).then(async (values) => {
+            // check discount valid
+            // calc with-discount total (if valid)
+            discount = discount ? await isDiscountValid(discount.discount_code, Total) : false;
+            if (discount) {
+                Total = Total - (Total * discount.value);
+            }
+            return [discount, Total];
+        }).then(async (value) => {
+            // insert order, order_detail
+            // update decrease stock
+            const shipper_id = await queryShipperMinOrders();
+            let order = {
+                user_id: user_id,
+                total: Total,
+                status: 'Pending',
+                address: address,
+                coordinate: JSON.stringify(coordinate),
+                discount_code: discount ? discount.discount_code : null,
+                shipper_id: shipper_id,
+                payment_method: 'CRYPTO'
+            }
+            const order_id = await queryInsertOrder(order);
+            //`order_id`, `product_id`, `size_name`, `amount`, `total`
+            const lstOrder_details = order_details.map(detail => {
+                return [order_id, detail.product_id, detail.size_name, detail.amount, detail.total];
+            })
+            await Promise.all([queryInsertOrderDetail(lstOrder_details),
+            queryDeleteCartItem(orderitems, user_id),
+            KavanoOrders.createOrder(order_id, ethers.utils.parseEther((Total / 24000).toString()))]);
+
+            const [TotalEth, EthPrice] = await Promise.all(
+                [KavanoOrders.USDtoWEI(ethers.utils.parseEther((Total / 24000).toString())),
+                KavanoOrders.getPriceETH()]);
+
+            var pmUpdateStock = upt_product_detail.map(detail => {
+                return updateStock(detail);
+            })
+            await Promise.all(pmUpdateStock);
+            res.json({
+                success: "202",
+                order_id: order_id,
+                total: Total,
+                totalEth: TotalEth.toString(),
+                ethPrice: EthPrice.toString(),
+            })
+
+            setTimeout(async () => {
+                // console.log(0, order_details);
+                const order = await queryGetOrderById(order_id)
+                if (order.status === 'Pending') {
+                    await Promise.all([returnProductStock(order_details),
+                    queryDeletePendingOrder(order_id),
+                    KavanoOrders.deleteOrder(order_id)]);
+                    console.log('deleted pending order in db and contract');
+                }
+            }, 30000);
         }).catch(async reason => {
             const productStocks = await Promise.all(pmProductStocks)
             return res.json({ error: 400, reason, productStocks });
@@ -304,8 +464,14 @@ export const updateOrderStatus = async (req, res) => {
     const db_order = await queryGetOrderById(req_order.order_id);
     let checkPermit = false;
     if (req_order.status === db_order.status) {
-        let time, uptStatus;
+        let time, uptStatus, shipper_id;
+        shipper_id = `, shipper_id='${db_order.shipper_id}'`;
         switch (db_order.status) {
+            case 'Pending':
+                time = `,place_time = '${mysqlDateFormat()}'`;
+                uptStatus = 'Placed';
+                checkPermit = true;
+                break;
             case 'Placed':
                 if (authority === 'admin') {
                     time = `,confirm_time = '${mysqlDateFormat()}'`;
@@ -315,8 +481,17 @@ export const updateOrderStatus = async (req, res) => {
                 break;
             case 'Confirm':
                 if (authority === 'admin') {
-                    time = `,deliver_time = '${mysqlDateFormat()}'`;
-                    uptStatus = 'Deliver';
+                    firebaseSet(firebaseDbRef(
+                        firebaseDb,
+                        `orders/${req_order.order_id}`
+                    ), {
+                        user_id: req_order.user_id,
+                        shipper_id: req_order.shipper_id,
+                        status: 'Confirm'
+                    })
+                    time = `,assign_time = '${mysqlDateFormat()}'`;
+                    uptStatus = 'Assign';
+                    shipper_id = `, shipper_id='${req_order.shipper_id}'`;
                     checkPermit = true;
                 }
                 break;
@@ -341,7 +516,7 @@ export const updateOrderStatus = async (req, res) => {
                 break;
         }
         if (checkPermit) {
-            queryUpdateOrderStatus(req, res, db_order.order_id, uptStatus, time);
+            queryUpdateOrderStatus(req, res, db_order.order_id, uptStatus, time, shipper_id);
         } else {
             res.json({
                 error: 400,
@@ -356,11 +531,12 @@ export const updateOrderStatus = async (req, res) => {
     }
 }
 
-async function returnProductStock(orderitems) {
+export async function returnProductStock(orderitems) {
+    // console.log('1', orderitems);
     let upt_product_detail = [];
-    let pmUpt_product_detail = orderitems.map(async (orderitem) => {
-        let stock = await isOverStock(orderitem, 0);
-        return new Promise((resolve, reject) => {
+    let pmUpt_product_detail = orderitems.map((orderitem) => {
+        return new Promise(async (resolve, reject) => {
+            let stock = await isOverStock(orderitem, 0);
             resolve({
                 product_id: orderitem.product_id,
                 size_name: orderitem.size_name,
@@ -370,25 +546,57 @@ async function returnProductStock(orderitems) {
     });
 
     upt_product_detail = await Promise.all(pmUpt_product_detail).catch(reason => reject(reason));
-    upt_product_detail.forEach(async detail => {
-        await updateStock(detail);
-    })
+    // console.log('2', upt_product_detail);
+    await Promise.all(upt_product_detail.map(detail => {
+        return updateStock(detail);
+    }))
 }
 
 export const cancelOrder = async (req, res) => {
     const order_id = req.body.order_id;
     const authority = req.user.authority;
-    const db_order = await queryGetOrderById(order_id);
-    const order_details = (await queryGetOrderDetail(req.body)).order_detail;
+    const pmGetOrderById = queryGetOrderById(order_id);
+    const pmOrderDetail = queryGetOrderDetail(req.body, false);
+    const [db_order, order_detail_temp] = await Promise.all([pmGetOrderById, pmOrderDetail]);
+    const order_details = order_detail_temp.order_detail;
     switch (db_order.status) {
         case 'Placed':
             returnProductStock(order_details);
             queryUpdateOrderStatus(req, res, order_id, 'Cancel', `,cancel_time = '${mysqlDateFormat()}'`);
+            db_order.payment_method === 'CRYPTO' ? await KavanoOrders.repay(order_id) : '';
             break;
         case 'Confirm':
             if (authority === 'admin') {
                 returnProductStock(order_details);
                 queryUpdateOrderStatus(req, res, order_id, 'Cancel', `,cancel_time = '${mysqlDateFormat()}'`);
+                db_order.payment_method === 'CRYPTO' ? await KavanoOrders.repay(order_id) : '';
+            }
+            break;
+        case 'Assign':
+            if (authority === 'admin') {
+                returnProductStock(order_details);
+
+                firebaseRemove(firebaseDbRef(
+                    firebaseDb,
+                    `messenger/${order_id}`))
+                    .then(() => {
+                        console.log("Data deleted successfully");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                firebaseRemove(firebaseDbRef(
+                    firebaseDb,
+                    `orders/${order_id}`))
+                    .then(() => {
+                        console.log("Data deleted successfully");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
+                queryUpdateOrderStatus(req, res, order_id, 'Cancel', `,cancel_time = '${mysqlDateFormat()}'`);
+                db_order.payment_method === 'CRYPTO' ? await KavanoOrders.repay(order_id) : '';
             } else {
                 res.json({
                     error: 400,
@@ -399,7 +607,28 @@ export const cancelOrder = async (req, res) => {
         case 'Deliver':
             if (authority === 'admin') {
                 returnProductStock(order_details);
+
+                firebaseRemove(firebaseDbRef(
+                    firebaseDb,
+                    `messenger/${order_id}`))
+                    .then(() => {
+                        console.log("Data deleted successfully");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+                firebaseRemove(firebaseDbRef(
+                    firebaseDb,
+                    `orders/${order_id}`))
+                    .then(() => {
+                        console.log("Data deleted successfully");
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    });
+
                 queryUpdateOrderStatus(req, res, order_id, 'Cancel', `,cancel_time = '${mysqlDateFormat()}'`);
+                db_order.payment_method === 'CRYPTO' ? await KavanoOrders.repay(order_id) : '';
             } else {
                 res.json({
                     error: 400,
@@ -420,6 +649,23 @@ export const cancelOrder = async (req, res) => {
             })
             break;
     }
+}
+
+export function queryDeletePendingOrder(order_id) {
+    const sql = "DELETE FROM `order` "
+        + `WHERE order_id = '${order_id}' `
+        + "AND `status` = 'Pending'"
+
+    return new Promise((resolve, reject) => {
+        db.query(sql, (err,) => {
+            if (!err) {
+                resolve(true)
+            } else {
+                console.log(err);
+                reject(err.message)
+            }
+        })
+    })
 }
 
 export function queryAlltimeRevenue() {
@@ -496,8 +742,14 @@ function queryDayStatistic() {
 function queryCountOrdersByStatus(dateFrom, dateTo) {
     const sql = "SELECT COUNT(order_id) AS orderCount, `order`.status "
         + "FROM `order` "
-        + `WHERE DATE(place_time) >= '${dateFrom}' 
-        AND DATE(place_time) <= '${dateTo}' `
+        + `WHERE (DATE(place_time) >= '${dateFrom}' 
+        AND DATE(place_time) <= '${dateTo}')  
+        OR (DATE(confirm_time) >= '${dateFrom}' 
+        AND DATE(confirm_time) <= '${dateTo}')  
+        OR (DATE(deliver_time) >= '${dateFrom}' 
+        AND DATE(deliver_time) <= '${dateTo}') 
+        OR (DATE(complete_time) >= '${dateFrom}' 
+        AND DATE(complete_time) <= '${dateTo}') `
         + "GROUP BY `order`.status"
 
     return new Promise((resolve, reject) => {
@@ -517,14 +769,17 @@ export const statisticRevenueByDay = async (req, res) => {
     const dayTo = mysqlDateFormat(new Date(req.query.dayto));
     const by = req.query.by;
 
-    let totalFromTo = await queryRevenueDayFromTo(dayFrom, dayTo, by);
-    let ordersByStatus = await queryCountOrdersByStatus(dayFrom, dayTo);
+    const pm1 = queryRevenueDayFromTo(dayFrom, dayTo, by);
+    const pm2 = queryCountOrdersByStatus(dayFrom, dayTo);
+    const pm3 = queryDayStatistic();
+    let [totalFromTo, ordersByStatus, today] = await Promise.all([pm1, pm2, pm3]);
+
     totalFromTo = totalFromTo.map(item => {
         item._month < 10 ? (item._month = '0' + item._month) : item._month;
         item._day < 10 ? (item._day = '0' + item._day) : item._day;
         return item;
     })
-    const today = await queryDayStatistic();
+    // console.log(ordersByStatus);
     res.json({
         success: 202,
         totalFromTo,

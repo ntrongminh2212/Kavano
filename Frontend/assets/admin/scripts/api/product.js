@@ -144,19 +144,12 @@ function getProductDetail(productId) {
 function createNewProductAPI(newProduct) {
     const adminToken = localStorage.getItem('adminToken')
     if (adminToken) {
-        fetch(productRouteURL + `/create`, requestOption('POST', newProduct, adminToken))
+        return fetch(productRouteURL + `/create`, requestOption('POST', newProduct, adminToken))
             .then(res => {
                 return res.json();
             })
             .then(res => {
-                if (res.success) {
-                    notificationDialog("success", "Tạo thành công sản phẩm mới");
-                    window.location.href = `./product-detail.html?id=${res.product_id}`;
-                    return res;
-                } else {
-                    alert(res.message);
-                    return false
-                }
+                return res;
             })
             .catch(err => {
                 alert('Tạo sản phẩm thất bại');

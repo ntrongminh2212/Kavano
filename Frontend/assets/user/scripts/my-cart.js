@@ -7,6 +7,18 @@ let myaddresses = [];
 let total = 0;
 let pauseRt = false;
 
+let inputProvince = document.querySelector('#province');
+
+constructor();
+async function constructor() {
+    let uptMycart = await getMyCart();
+    if (JSON.stringify(uptMycart) !== JSON.stringify(mycart)) {
+        console.log('up to date');
+        mycart = uptMycart;
+        setUp();
+    }
+}
+
 let rtMyaddesses = setInterval(async () => {
     if (!pauseRt) {
         let uptMyaddesses = await getUserAdressAPI();
@@ -15,7 +27,7 @@ let rtMyaddesses = setInterval(async () => {
             renderAddressItem();
         }
     }
-}, 1500);
+}, 5000);
 let rtMyCart = setInterval(async () => {
     if (!pauseRt) {
         let uptMycart = await getMyCart();
@@ -25,7 +37,7 @@ let rtMyCart = setInterval(async () => {
             setUp();
         }
     }
-}, 1000);
+}, 3000);
 let rtCoupons = setInterval(async () => {
     if (!pauseRt) {
         let uptCoupons = await getCoupons();
@@ -144,11 +156,21 @@ function selectAllCart(input) {
 }
 
 function fillShippingAddress(selectAddress) {
-    var addressForm = document.querySelector('div#shipping');
-    var inputs = addressForm.querySelectorAll('input[name]');
-    Array.from(inputs).forEach(input => {
-        input.value = selectAddress[input.name];
-    })
+    // var addressForm = document.querySelector('div#shipping');
+    // var inputs = addressForm.querySelectorAll('input[name]');
+    // Array.from(inputs).forEach(input => {
+    //     input.value = selectAddress[input.name];
+    // })
+    selectedLoc = {
+        ...selectedLoc,
+        place_id: selectAddress.place_id,
+        display_name: selectAddress.display_address,
+        lat: selectAddress.coordinate.latitude,
+        lon: selectAddress.coordinate.longitude
+    };
+    let input = document.querySelector('#address');
+    input.value = selectedLoc.display_name;
+    setMarkerCoord(selectedLoc.lat, selectedLoc.lon);
 }
 
 // Set event funcs
@@ -164,6 +186,7 @@ function filterCoupons(inputStr) {
 }
 
 function setCoupon(couponCode) {
+    console.log(123);
     document.querySelector('input#coupon-code').value = couponCode;
     document.querySelector('input#coupon-code').dispatchEvent(new Event('change'));
 }
@@ -243,11 +266,15 @@ function setAmountBoxAction() {
 }
 
 function selectAddressAction(elAddress) {
-    var properties = elAddress.querySelectorAll('span[class]');
-    var selectAddress = myaddresses.find(address => {
-        return Array.from(properties).every(property => {
-            return property.innerHTML === address[property.className];
-        })
+    // var properties = elAddress.querySelectorAll('span[class]');
+    // var selectAddress = myaddresses.find(address => {
+    //     return Array.from(properties).every(property => {
+    //         return property.innerHTML === address[property.className];
+    //     })
+    // })
+    var place_id = elAddress.getAttribute('place_id');
+    const selectAddress = myaddresses.find(address => {
+        return address.place_id == place_id;
     })
     fillShippingAddress(selectAddress);
     let modalAddress = document.querySelector('#addresses-modal');
@@ -257,17 +284,21 @@ function selectAddressAction(elAddress) {
 async function deleteAddressAction(elAddress) {
     const option = await dialog('alert', 'Bạn có chắc muốn xóa địa chỉ này không');
     if (option) {
-        var properties = elAddress.querySelectorAll('span[class]');
-        var selectAddress = myaddresses.find(address => {
-            return Array.from(properties).every(property => {
-                return property.innerHTML === address[property.className];
-            })
+        // var properties = elAddress.querySelectorAll('span[class]');
+        // var selectAddress = myaddresses.find(address => {
+        //     return Array.from(properties).every(property => {
+        //         return property.innerHTML === address[property.className];
+        //     })
+        // })
+        var place_id = elAddress.getAttribute('place_id');
+        const selectAddress = myaddresses.find(address => {
+            return address.place_id == place_id;
         })
         const response = await deleteUserAdressAPI(JSON.stringify(selectAddress));
-        console.log(response);
         if (response.success) {
             notificationDialog('success', response.message)
         }
+
     }
 }
 
@@ -296,17 +327,23 @@ async function createOrderEvent() {
     let shippingContainer = document.querySelector('#shipping');
 
     let elCartItems = cartContainer.querySelectorAll('div.cart-item input.select:checked');
-    let inputAddresses = shippingContainer.querySelectorAll('input');
+    // let inputAddresses = shippingContainer.querySelectorAll('input');
+    let inputAddress = shippingContainer.querySelector('#address');
     let isFullfill = true;
     let alertMess = [' ', ' '];
 
     let address = '';
+    let coordinate = {};
     let orderItems = Array.from(elCartItems).map(item => {
         let product_id = item.parentElement.parentElement.id;
         let itemSize = item.parentElement.parentElement.querySelector("div.size").innerText;
         var item = mycart.find(element => {
             return (element.product_id == product_id && element.size_name == itemSize);
         });
+        if (item.stock < item.amount) {
+            alertMess[0] = 'Không đủ sản phẩm tồn kho \n';
+            isFullfill = false;
+        }
         return item;
     });
 
@@ -317,16 +354,29 @@ async function createOrderEvent() {
     }
     // Shipping address full fill?
     var inUseAddress = {};
-    Array.from(inputAddresses).reverse().forEach(input => {
-        if (!input.value) {
-            input.parentElement.classList.add('invalid');
-            isFullfill = false;
-            alertMess[1] = 'Bạn chưa điền đầy đủ địa chỉ giao hàng';
-        } else {
-            inUseAddress[input.name] = input.value.trim();
-            address ? (address += ', ' + input.value) : (address += input.value);
+    // Array.from(inputAddresses).reverse().forEach(input => {
+    if (!inputAddress.value) {
+        inputAddress.parentElement.classList.add('invalid');
+        isFullfill = false;
+        alertMess[1] = 'Bạn chưa điền đầy đủ địa chỉ giao hàng';
+    } else {
+        // inUseAddress[inputAddress.name] = inputAddress.value.trim();
+        // address ? (address += ', ' + inputAddress.value) : (address += inputAddress.value);
+        address = selectedLoc.display_name;
+        coordinate = {
+            latitude: selectedLoc.lat,
+            longitude: selectedLoc.lon
         }
-    })
+        inUseAddress = {
+            place_id: selectedLoc.place_id,
+            display_address: address,
+            coordinate: {
+                latitude: selectedLoc.lat,
+                longitude: selectedLoc.lon
+            }
+        };
+    }
+    // })
     // Data->JSON
     try {
         applyDiscount(inUseCoupon.discount_code)
@@ -336,30 +386,33 @@ async function createOrderEvent() {
     if (isFullfill) {
         const order = {
             address: address,
+            coordinate: coordinate,
             discount: inUseCoupon,
             orderitems: orderItems
         }
+        localStorage.setItem('order', JSON.stringify(order))
         await checkNewAddress(inUseAddress);
-        const option = await dialog('alert', 'Xác nhận đặt hàng?')
-        if (option) {
-            loadingDialog();
-            const response = await createOrder(JSON.stringify(order));
-            if (response.success) {
-                document.querySelector("section#main").innerHTML = `
-            <div class="order-success">
-                <h5 class="p-4">Đặt hàng thành công mã đơn hàng: ${response.order_id}</h5>
-                <img style="width: 12%;" src="../img/modal/success.png" class="mt-4" alt="">
-                <span style="font-size: 24px; font-style: italic;">Cảm ơn bạn đã mua hàng tại Kavano!</span>
-                <a id="my-order" href="./my-orders.html" class="mt-4">Xem đơn hàng của bạn</a>
-            </div>`
-                let sectionDialog = document.querySelector("section[id='dialog']");
-                sectionDialog.innerHTML = '';
-            } else {
-                //abc
-                dialog('failure', 'Không thể đặt hàng vì số lượng tồn sản phẩm không đủ');
-                outStockNotification(response.productStocks);
-            }
-        }
+        window.location.href = './confirm-order.html';
+        // const option = await dialog('alert', 'Xác nhận đặt hàng?')
+        // if (option) {
+        //     loadingDialog();
+        //     const response = await createOrder(JSON.stringify(order));
+        //     if (response.success) {
+        //         document.querySelector("section#main").innerHTML = `
+        //     <div class="order-success">
+        //         <h5 class="p-4">Đặt hàng thành công mã đơn hàng: ${response.order_id}</h5>
+        //         <img style="width: 12%;" src="../img/modal/success.png" class="mt-4" alt="">
+        //         <span style="font-size: 24px; font-style: italic;">Cảm ơn bạn đã mua hàng tại Kavano!</span>
+        //         <a id="my-order" href="./my-orders.html" class="mt-4">Xem đơn hàng của bạn</a>
+        //     </div>`
+        //         let sectionDialog = document.querySelector("section[id='dialog']");
+        //         sectionDialog.innerHTML = '';
+        //     } else {
+        //         //abc
+        //         dialog('failure', 'Không thể đặt hàng vì số lượng tồn sản phẩm không đủ');
+        //         outStockNotification(response.productStocks);
+        //     }
+        // }
     } else {
         rs = await dialog('failure', alertMess[0] + alertMess[1]);
     }
@@ -368,10 +421,7 @@ async function createOrderEvent() {
 function checkNewAddress(inUseAddress) {
     return new Promise(async (resolve, reject) => {
         const isExist = myaddresses.some(address => {
-            return inUseAddress.province === address.province
-                && inUseAddress.district === address.district
-                && inUseAddress.ward === address.ward
-                && inUseAddress.address === address.address
+            return inUseAddress.place_id === address.place_id
         })
 
         if (!isExist) {
@@ -457,11 +507,8 @@ function renderAddressItem() {
     var addressesContainer = document.querySelector('#addresses-container');
     addressesContainer.innerHTML = myaddresses.map(address => {
         return `<div class="address-item">
-        <div class="address-data" onclick="selectAddressAction(this)">
-            <span class="address">${address.address}</span>,
-            <span class="ward">${address.ward}</span>,
-            <span class="district">${address.district}</span>,
-            <span class="province">${address.province}</span>
+        <div class="address-data" onclick="selectAddressAction(this)" place_id="${address.place_id}">
+            <span class="address">${address.display_address}</span>
         </div>
         <i data-toggle="tooltip" data-placement="bottom" class="delete-address icon-trash" title=""
             data-original-title="Xóa địa chỉ"

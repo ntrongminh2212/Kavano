@@ -1,11 +1,13 @@
 import express from 'express';
 import { adminAuthenticate, userAuthenticate } from '../controllers/users.js';
-import { cancelOrder, createOrder, getOrders, queryUpdateOrderStatus, statisticRevenueByDay, updateOrderStatus } from '../controllers/order.js';
+import { cancelOrder, createCryptoOrder, createOrder, getOrders, queryUpdateOrderStatus, statisticRevenueByDay, updateOrderStatus } from '../controllers/order.js';
 
 
 const router = express.Router();
 
 router.post('/create-order', userAuthenticate, createOrder);
+
+router.post('/create-crypto-order', userAuthenticate, createCryptoOrder);
 
 router.put('/update-status', userAuthenticate, updateOrderStatus);
 

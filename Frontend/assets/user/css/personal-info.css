@@ -1,0 +1,237 @@
+* {
+    background-color: unset;
+}
+
+#main {
+    border-top: 58px solid transparent;
+    background-color: #f6f6f6;
+    height: 100%;
+}
+
+#personal-info {
+    background: white;
+    padding: 8px;
+    border-radius: 10px;
+}
+
+.info {
+    padding: 4px 24px !important;
+}
+
+.info-vertical {
+    width: 1px !important;
+    border-left: 1px solid rgb(235, 235, 240);
+    margin: unset !important;
+    padding: unset !important;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 32px;
+    align-items: center;
+    position: relative;
+}
+
+.form-birth {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+}
+
+.form-birth>select {
+    width: 116px !important;
+    margin-right: 6px;
+}
+
+.form-group.sex .form-control {
+    width: 20px !important;
+}
+
+.form-label.sex {
+    display: block;
+    line-height: 40px;
+    font-weight: normal;
+    padding-bottom: 0;
+    margin-left: 5px;
+    width: 60px;
+}
+
+.form-control .form-label,
+.form-message {
+    text-align: left;
+}
+
+.form-label {
+    font-weight: 600;
+    line-height: 1.5rem;
+    font-size: 1rem;
+    margin-bottom: unset !important;
+    width: 120px;
+    text-align: left;
+}
+
+.form-control {
+    appearance: auto !important;
+    -webkit-appearance: auto !important;
+    width: 300px !important;
+    height: 36px;
+    padding: 8px 12px;
+    border: 1px solid #b3b3b3;
+    border-radius: 3px;
+    outline: none;
+    font-size: 1.4rem;
+}
+
+.form-control:hover {
+    border-color: #1dbfaf;
+}
+
+.form-group.invalid .form-control {
+    border-color: #f33a58;
+}
+
+.form-group.invalid .form-message {
+    color: #f33a58;
+}
+
+.form-message {
+    font-size: 0.8rem;
+    padding: 4px 0 0;
+    position: absolute;
+    top: 94%;
+    left: 21%;
+}
+
+.form-submit {
+    display: block;
+    outline: none;
+    background-color: #1dbfaf;
+    margin-top: 12px;
+    padding: 8px 0px;
+    font-weight: 600;
+    color: #fff;
+    border: none;
+    width: 176px;
+    font-size: 14px;
+    border-radius: 5px;
+    transform: translateX(105%);
+    cursor: pointer;
+}
+
+.change {
+    display: block;
+    outline: none;
+    background-color: white;
+    padding: 4px 0px;
+    font-weight: 600;
+    color: #139392;
+    border: none;
+    width: 100px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #1dbfaf;
+}
+
+.form-submit:hover {
+    background-color: #1ac7b6;
+}
+
+div.avatar {
+    display: flex;
+    position: relative;
+    justify-content: center;
+}
+
+p.desc {
+    font-size: 20px;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+#selectimg-container {
+    position: absolute;
+}
+
+#selectimg-container {
+    position: absolute;
+    top: 68%;
+    left: 53.5%;
+    width: fit-content;
+}
+
+#selectimg-container label {
+    background-color: #80808087;
+    cursor: pointer;
+    /* border: 1px solid #698489; */
+    padding: 8px 8px;
+    border-radius: 50%;
+    color: #525e6c;
+    font-size: 16px;
+    font-weight: 500;
+    transition: ease 100ms;
+}
+
+#selectimg-container label:hover {
+    background-color: #4d80b2;
+    color: white;
+}
+
+#selectimg {
+    display: none;
+}
+
+#avatar-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 4px solid rgb(194, 225, 255);
+}
+
+#change-password-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 130px;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#change-password-modal .modal-content {
+    background-color: #fefefe;
+    text-align: center;
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 30%;
+}
+
+#change-password-modal #confirm-change {
+    border-radius: 5px;
+    width: 32%;
+    border: 1px solid rgb(11, 116, 229);
+    color: white;
+    font-weight: 500;
+    background-color: rgb(11, 116, 229);
+    padding: 6px 0;
+    margin-top: 12px;
+}
+
+#close-modal {
+    position: absolute;
+    right: 3%;
+    top: 2%;
+    font-size: 22px;
+}
+
+#close-modal:hover {
+    color: red;
+}

@@ -15,7 +15,7 @@ function renderContainer(selector, items, renderCallback) {
     container.innerHTML = renderCallback(items);
 }
 
-function dateFormat(strDate) {
+function dateFormat(strDate, birth = false) {
     let date = new Date(strDate);
     let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
     let month = date.getMonth() < 9 ? ('0' + (date.getMonth() + 1)) : (date.getMonth() + 1);
@@ -23,7 +23,7 @@ function dateFormat(strDate) {
     let hour = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
     let minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
     let noon = hour < 12 ? 'AM' : 'PM'
-    return `${day}/${month}/${date.getFullYear()} ${hour}:${minutes} ${noon}`;
+    return `${day}/${month}/${date.getFullYear()}` + (birth ? '' : ` ${hour}:${minutes} ${noon}`);
 }
 
 function priceFormat(price) {

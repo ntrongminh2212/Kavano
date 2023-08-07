@@ -1,10 +1,22 @@
 var serverURL = "http://localhost:5000";
 const orderRouteURL = serverURL + "/order";
 
-function createOrder(order) {
+function createOrder(order, payment_method = 'CASH') {
     const userToken = localStorage.getItem("userToken");
     if (userToken) {
-        return fetch(orderRouteURL + '/create-order', requestOption('POST', order, userToken))
+        if (payment_method === 'CRYPTO')
+            return fetch(orderRouteURL + '/create-crypto-order', requestOption('POST', order, userToken))
+                .then(res => {
+                    return res.json();
+                })
+                .then(res => {
+                    console.log(res);
+                    return res;
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        else return fetch(orderRouteURL + '/create-order', requestOption('POST', order, userToken))
             .then(res => {
                 return res.json();
             })
@@ -15,7 +27,6 @@ function createOrder(order) {
             .catch(err => {
                 console.log(err);
             })
-
     } else {
         window.location.href = "./login.html";
     }
@@ -24,14 +35,14 @@ function createOrder(order) {
 function getOrders() {
     const userToken = localStorage.getItem("userToken");
     if (userToken) {
-        console.log('get orders');
+        // console.log('get orders');
         return fetch(orderRouteURL + "/my-orders", requestOption('GET', undefined, userToken))
             .then(res => {
                 return res.json();
             })
             .then(res => {
                 if (res.success) {
-                    console.log('my orders', res);
+                    // console.log('my orders', res);
                     return res.orders;
                 } else {
                     window.location.href === 'http://127.0.0.1:5500/Frontend/assets/user/view/login.html'

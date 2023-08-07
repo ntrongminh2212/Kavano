@@ -8,9 +8,11 @@ import cartRouter from './routes/cart.js';
 import discountRouter from './routes/discount.js';
 import orderRouter from './routes/order.js'
 import brandRouter from './routes/brand.js';
+import shipperRouter from './routes/shipper.js';
 import cors from 'cors'
 import Jwt from 'jsonwebtoken';
 import { } from 'dotenv/config'
+import { listenToEvent } from './kavanoorder.js';
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -28,6 +30,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use('/users', userRouter);
+app.use('/shipper', shipperRouter);
 app.use('/product', productRouter);
 app.use('/category', categoryRouter);
 app.use('/brand', brandRouter);
@@ -41,12 +44,13 @@ db.connect((err) => {
     if (err) {
         console.log(err.message);
     }
-    console.log("mysql");
 })
 
 app.get('/', (req, res) => {
     res.json("success")
 })
+
+listenToEvent();
 
 export const jwt = Jwt;
 export const key = {

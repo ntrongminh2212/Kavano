@@ -13,7 +13,6 @@ setLoginStatus();
 cartAmount();
 
 function setLoginStatus() {
-
     if (localStorage.getItem("userToken")) {
         elLogin.style.display = 'none';
         elNotification.style.display = 'block';
@@ -22,6 +21,9 @@ function setLoginStatus() {
 
         user = JSON.parse(localStorage.getItem("user"));
         elUser.querySelector("img").src = user.avatar;
+        elUser.querySelector("img").onclick = function () {
+            window.location.href = "./personal-info.html"
+        }
     } else {
         elLogin.style.display = 'block';
         elNotification.style.display = 'none';
@@ -72,7 +74,7 @@ async function cartAmount(callback) {
         }
         if (typeof callback === 'function') {
             callback();
-            delete callback;
+            delete { callback };
         }
     }
 }

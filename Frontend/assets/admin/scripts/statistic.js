@@ -24,6 +24,7 @@ async function setUp() {
     inputDayfrom.value = dateFormatInput(new Date(today.setDate(today.getDate() - 7)));
     overall = await getStatisticDataAPI('2022-01-01', '2022-01-01');
     renderOverAll(overall);
+    getStatisticData();
 }
 
 function dateFormatInput(date = new Date(), format = 'yyyy-mm-dd') {
@@ -85,6 +86,7 @@ async function processDataByDay() {
         dataContainer.style.display = 'block'
         const data = await getStatisticDataAPI(dateFormatInput(dateDayFrom), dateFormatInput(dateDayTo));
         // Revenue
+        console.log(data);
         const totalByDay = data.totalFromTo;
         date_revenue = {};
         while (dateDayFrom <= dateDayTo) {
@@ -172,7 +174,6 @@ function renderRevenueChart() {
 }
 
 function renderPieChart() {
-
     var colors = [];
     var xArray = ordersCountByStatus.map(item => {
         var statusVn;
@@ -185,7 +186,10 @@ function renderPieChart() {
                 statusVn = 'Đã xác nhận'
                 colors.push('rgb(148, 103, 189)')
                 break;
-
+            case 'Assign':
+                statusVn = 'Đã phân công'
+                colors.push('rgb(235, 210, 52)')
+                break;
             case 'Deliver':
                 statusVn = 'Đang giao'
                 colors.push('rgb(31, 119, 180)')
@@ -218,4 +222,51 @@ function renderPieChart() {
 function renderOverAll(overall) {
     h1Alltimetotal.innerHTML = priceFormat(overall.today.revenue) + 'VND';
     h1Orderscount.innerHTML = overall.today.orderscount + ' Đơn Hàng';
+}
+
+async function exportPDF() {
+
+    const lineHeight = 10;
+    var callAddFont = function () {
+        this.addFileToVFS('times.ttf', fontTimesNewRoman);
+        this.addFont('times.ttf', 'times', 'normal');
+        this.addFont('times.ttf', 'times', 'bold');
+    };
+    jsPDF.API.events.push(['addFonts', callAddFont]);
+
+    let doc = new jsPDF()
+    doc.setFont('times', 'bold');
+    doc.setFontSize(16);
+
+    doc.text(`                     THỐNG KÊ TỔNG HỢP 
+    TỪ NGÀY ${dateFormatInput(new Date(inputDayfrom.value), 'dd/mm/yyyy')} ĐẾN NGÀY ${dateFormatInput(new Date(inputDayto.value), 'dd/mm/yyyy')}`, 40, 25);
+    var revenueChartImg, statusCountChartImg;
+    await Plotly.toImage('revenueChart', { format: 'png', width: 879, height: 650 }).then(function (dataURL) {
+        revenueChartImg = dataURL;
+    });
+
+    await Plotly.toImage('statusCountChart', { format: 'png', width: 879, height: 650 }).then(function (dataURL) {
+        statusCountChartImg = dataURL;
+    });
+
+    doc.setFont('times', 'normal');
+    doc.setFontSize(16);
+    doc.text(`I. Doanh thu từ ngày ${dateFormatInput(new Date(inputDayfrom.value), 'dd/mm/yyyy')} đến ngày ${dateFormatInput(new Date(inputDayto.value), 'dd/mm/yyyy')}`, 25, 44);
+    doc.addImage(revenueChartImg, "png", 20, 45, 180, 133);
+
+    // const tblRevenue = Object.keys(date_revenue).map(key => {
+    //     const [year, month, day] = key.split('-');
+    //     const time = [day, month, year].join('/');
+    //     return {
+    //         time: time,
+    //         revenue: date_revenue[key]
+    //     }
+    // })
+    // console.log(tblRevenue);
+    // doc.table(tblRevenue, ['Thời gian', 'Doanh thu'], 20, 100)
+    doc.addPage();
+    doc.internal.getNumberOfPages();
+    doc.text(`II. Số đơn hàng theo trạng thái từ ngày ${dateFormatInput(new Date(inputDayfrom.value), 'dd/mm/yyyy')} đến ngày ${dateFormatInput(new Date(inputDayto.value), 'dd/mm/yyyy')}`, 25, 25);
+    doc.addImage(statusCountChartImg, "png", 20, 26, 180, 133);
+    doc.save("output.pdf")
 }

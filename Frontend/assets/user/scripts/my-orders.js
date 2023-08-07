@@ -17,6 +17,7 @@ let rtOrders = setInterval(async () => {
 function setUp() {
   renderContainer('.tab-content #placed', filterOrderByStatus('Placed', orders), renderOrder)
   renderContainer('.tab-content #confirm', filterOrderByStatus('Confirm', orders), renderOrder)
+  renderContainer('.tab-content #assign', filterOrderByStatus('Assign', orders), renderOrder)
   renderContainer('.tab-content #deliver', filterOrderByStatus('Deliver', orders), renderOrder)
   renderContainer('.tab-content #complete', filterOrderByStatus('Complete', orders), renderOrder)
   renderContainer('.tab-content #cancel', filterOrderByStatus('Cancel', orders), renderOrder)
@@ -63,6 +64,7 @@ function filterOrders(searchStr) {
   new Promise((resolve, reject) => {
     resolve([renderContainer('.tab-content #placed', filterOrderByStatus('Placed', filterOrders), renderOrder),
     renderContainer('.tab-content #confirm', filterOrderByStatus('Confirm', filterOrders), renderOrder),
+    renderContainer('.tab-content #confirm', filterOrderByStatus('Assign', filterOrders), renderOrder),
     renderContainer('.tab-content #deliver', filterOrderByStatus('Deliver', filterOrders), renderOrder),
     renderContainer('.tab-content #complete', filterOrderByStatus('Complete', filterOrders), renderOrder),
     renderContainer('.tab-content #cancel', filterOrderByStatus('Cancel', filterOrders), renderOrder)]);
@@ -147,9 +149,9 @@ async function addReviewAction(data) {
 // Render funcs
 function renderDateStatus(order) {
   let template;
-  if (order.status === 'Complete') {
-    console.log(order.status);
-  }
+  // if (order.status === 'Complete') {
+  //   console.log(order.status);
+  // }
   switch (order.status) {
     case 'Placed':
       template = `<span class="title">Đặt ngày:</span>
@@ -158,6 +160,10 @@ function renderDateStatus(order) {
     case 'Confirm':
       template = `<span class="title">Xác nhận ngày:</span>
             <span class="propety"> ${dateFormat(order.confirm_time)}</span>`;
+      break;
+    case 'Assign':
+      template = `<span class="title">Phân công ngày:</span>
+              <span class="propety"> ${dateFormat(order.assign_time)}</span>`
       break;
     case 'Deliver':
       template = `<span class="title">Vận chuyển ngày:</span>
@@ -282,18 +288,37 @@ function renderOrder(_orders) {
             <!-- User, Address, Total -->
             <div id="detail" class="row py-2">
               <div class="col-4 px-3">
-              <div class="py-1">
-              ${renderDateStatus(order)};
-            </div>
+                <div class="py-1">
+                  ${renderDateStatus(order)};
+                </div>
+                <div class="py-1">
+                <span class="title">Hình thức thanh toán: </span>
+                <span class="propety"> 
+                  ${order.payment_method === 'CRYPTO' ?
+        'Tiền mã hóa ETH' : 'Trả tiền mặt khi nhận hàng'}
+                </span>
               </div>
+             </div>
               <div class="col-4 px-3">
                 <div class="py-1">
                   <span class="title">Giao tới: </span>
                   <span class="propety">${order.address}</span>
                 </div>
               </div>
-              <h6 class="col-2 item-propety">Tổng</h6>
-              <span id="cal-total" class="col-2 item-total item-propety">${priceFormat(order.total)} VND</span>
+              <div class="col-4 px-3">
+                <div class="py-1 d-flex flex-row">
+                  <h6 class="col-6 item-propety">Tổng</h6>
+                  <span id="cal-total" class="col-6 item-total item-propety">${priceFormat(order.total)} VND</span>
+                </div>
+                ${order.eth_pay ?
+        `<div class="py-1 d-flex flex-row">
+                  <h6 class="col-6 item-propety">Đã trả</h6>
+                  <span id="eth-pay" class="col-6 item-total item-propety">
+                    ${order.eth_pay}
+                    <i class="fa-brands fa-ethereum px-2"></i> 
+                  </span>
+                </div>`: ''}
+              </div>
             </div>
           </div>
         </div>`

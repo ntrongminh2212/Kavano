@@ -89,7 +89,7 @@ a {
 
 span.title {
     color: rgb(116, 115, 115);
-    margin-right: 16px;
+    margin-right: 8px;
 }
 
 .coupon .propety,
@@ -124,7 +124,7 @@ span.title {
 
 .order-id>* {
     line-height: 45px;
-    font-size: medium;
+    font-size: 18px;
     font-weight: 600;
 }
 
@@ -292,4 +292,13 @@ a.review {
 
 .form-group.invalid .form-message {
     color: #f33a58;
+}
+
+#eth-pay {
+    color: #37367b;
+    align-items: center;
+}
+
+#eth-pay i {
+    font-size: 20px;
 }

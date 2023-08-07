@@ -31,11 +31,11 @@ function renderProduct(products) {
 
 function renderHomeCategories(categories) {
     return categories.map((category) =>
-        `<a class="category" href="#" id="${category.category_id}">
+        `<a class="category" href="./search-results.html?searchbar=${category.name}" id="${category.category_id}">
             <img src="${category.image_url}" alt="" srcset="">
             <h5 class="cate-name mt-1">${category.name}</h5>
         </a>
-        <a class="category" href="#" id="${category.category_id}">
+        <a class="category" href="./search-results.html?searchbar=${category.name}" id="${category.category_id}">
             <img src="${category.image_url}" alt="" srcset="">
             <h5 class="cate-name mt-1">${category.name}</h5>
         </a>`

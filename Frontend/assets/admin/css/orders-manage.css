@@ -9,6 +9,11 @@ body {
 }
 
 #statusTab {
+    position: sticky;
+    top: 58px;
+    z-index: 3;
+    font-weight: 600;
+    box-shadow: 0px 2px 4px 0px #a4a1a1;
     background: white;
     border-radius: 5px;
 }
@@ -76,17 +81,21 @@ a {
 
 
 #cal-total {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 span.title {
     color: rgb(116, 115, 115);
-    margin-right: 16px;
+    margin-right: 8px;
+    font-size: 15px;
+}
+
+span.propety {
+    font-size: 15px;
 }
 
 .coupon .propety,
 #detail .propety {
-    font-size: 15px;
     font-weight: 500;
 }
 
@@ -228,4 +237,144 @@ a.complete {
 
 #cancel-nav {
     color: #e61111 !important;
+}
+
+#assign-shipper-modal {
+    display: none;
+    position: fixed;
+    z-index: 3;
+    padding-top: 130px;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+#assign-shipper-modal .modal-content {
+    background-color: #fefefe;
+    text-align: center;
+    position: relative;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 43%;
+}
+
+#assign-shipper-modal #send-assign-shipper {
+    border-radius: 5px;
+    width: 32%;
+    border: 1px solid rgb(11, 116, 229);
+    color: white;
+    font-weight: 500;
+    background-color: rgb(11, 116, 229);
+    padding: 6px 0;
+    margin-top: 12px;
+}
+
+#close-modal {
+    position: absolute;
+    right: 3%;
+    top: 2%;
+    font-size: 22px;
+}
+
+#close-modal:hover {
+    color: red;
+}
+
+form {
+    width: 100%;
+}
+
+.form-group {
+    position: relative;
+    text-align: left;
+    padding: 8px 4px;
+    align-items: center;
+}
+
+.form-group input {
+    height: 40px;
+}
+
+
+.form-group .form-label {
+    word-wrap: normal;
+    margin-right: 4px;
+}
+
+input.valid_time {
+    width: 160px !important;
+}
+
+input#value {
+    width: 75%;
+}
+
+input#value+span {
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    right: 18%;
+}
+
+.form-control {
+    background-color: white;
+}
+
+.form-control:hover {
+    border-color: #1dbfaf;
+}
+
+ul.list-none {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    z-index: 10;
+    width: 100%;
+    position: absolute;
+}
+
+ul.list-none li:hover {
+    background-color: rgb(237 235 235) !important;
+    cursor: pointer;
+}
+
+.modal-content .order {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    justify-items: flex-start;
+    align-items: flex-start;
+}
+
+.modal-content .order div {
+    width: 100%;
+    text-align: start;
+    margin-bottom: 8px;
+    padding: 0 4px;
+}
+
+.modal-content .order div .tittle {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.modal-content .order div .value {}
+
+#eth-pay {
+    color: #37367b;
+    align-items: center;
+}
+
+#eth-pay i {
+    font-size: 20px;
+}
+
+.cbx-icon {
+    position: absolute;
+    right: 12px;
+    bottom: 20px;
 }

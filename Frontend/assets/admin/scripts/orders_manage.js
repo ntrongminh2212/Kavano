@@ -1,5 +1,19 @@
 let orders = [];
+let shippers = [];
 var pauseRt = false;
+
+let modalAssignShipper = document.querySelector('#assign-shipper-modal');
+let ulShipperIds = modalAssignShipper.querySelector('#ulShipperIds');
+let ulShipperNames = modalAssignShipper.querySelector('#ulShipperNames');
+let inputShipperId = modalAssignShipper.querySelector('#shipper-id');
+let inputShippperName = modalAssignShipper.querySelector('#shipper-name');
+let txtShippperEmail = modalAssignShipper.querySelector('#shipper-email');
+let txtShippperPhone = modalAssignShipper.querySelector('#shipper-phone');
+let txtShippperBirth = modalAssignShipper.querySelector('#shipper-birth');
+let txtAssignCount = modalAssignShipper.querySelector('#assign-count');
+let txtAssignOrderId = modalAssignShipper.querySelector('.order .id .value');
+let txtAssignOrderLocation = modalAssignShipper.querySelector('.order .location .value');
+
 
 let rtOrders = setInterval(async () => {
   if (!pauseRt) {
@@ -12,14 +26,19 @@ let rtOrders = setInterval(async () => {
     }
     pauseRt = false;
   }
-}, 500);
+}, 1500);
 
 function setUp() {
   renderContainer('.tab-content #placed', filterOrderByStatus('Placed', orders), renderOrder)
   renderContainer('.tab-content #confirm', filterOrderByStatus('Confirm', orders), renderOrder)
+  renderContainer('.tab-content #assign', filterOrderByStatus('Assign', orders), renderOrder)
   renderContainer('.tab-content #deliver', filterOrderByStatus('Deliver', orders), renderOrder)
   renderContainer('.tab-content #complete', filterOrderByStatus('Complete', orders), renderOrder)
   renderContainer('.tab-content #cancel', filterOrderByStatus('Cancel', orders), renderOrder)
+
+  modalAssignShipper.querySelector('#close-modal').onclick = () => {
+    modalAssignShipper.style.display = 'none'
+  }
 }
 
 function filterOrderByStatus(_status, _orders) {
@@ -29,17 +48,61 @@ function filterOrderByStatus(_status, _orders) {
 }
 
 //Event funcs
-async function updateStatusAction(elOrder) {
+async function selectShipper(shipper_id) {
+  let inputShipperId = document.querySelector("input[id='shipper-id']");
+  var shipper = shippers.find(shipper => {
+    return shipper.shipper_id === Number(shipper_id);
+  })
+
+  inputShipperId.value = shipper.shipper_id;
+  inputShippperName.value = shipper.name;
+  txtShippperBirth.innerHTML = dateFormat(shipper.dateOfBirth, true);
+  txtShippperPhone.innerHTML = shipper.phone;
+  txtShippperEmail.innerHTML = shipper.email;
+  txtAssignCount.innerHTML = shipper.assign_count > 0 ?
+    shipper.assign_count + ' Đơn hàng' :
+    'Không có đơn hàng nào'
+}
+
+async function assignShipper(elOrder) {
   const _order_id = elOrder.getAttribute('order-id');
   var clickOrder = orders.find(order => {
     return order.order_id === _order_id;
   })
-  pauseRt = true;
+  shippers = await getAllShipper();
 
+  ulShipperIds.innerHTML = renderLstShipperIds(shippers)
+  ulShipperNames.innerHTML = renderLstShipperNames(shippers)
+  inputShipperId.value = clickOrder.shipper_id;
+  selectShipper(clickOrder.shipper_id);
+  txtAssignOrderId.innerHTML = _order_id;
+  txtAssignOrderLocation.innerHTML = clickOrder.address;
+  modalAssignShipper.style.display = 'block';
+
+  const bttConfirmAssignShipper = modalAssignShipper.querySelector('#send-assign-shipper');
+  bttConfirmAssignShipper.onclick = async () => {
+    clickOrder.shipper_id = inputShipperId.value;
+    updateStatusAction(elOrder, clickOrder);
+    modalAssignShipper.style.display = 'none';
+  }
+}
+
+async function updateStatusAction(elOrder, order = '') {
+  var clickOrder;
+  if (!order) {
+    let _order_id = elOrder.getAttribute('order-id');
+    clickOrder = orders.find(order => {
+      return order.order_id === _order_id;
+    })
+  } else {
+    clickOrder = order;
+  }
+
+  pauseRt = true;
   const rs = await updateOrderStatus(JSON.stringify(clickOrder));
   if (rs.success) {
     notificationDialog('success', 'Trạng thái đơn hàng đã được cập nhật')
-    elOrder.remove();
+    elOrder ? elOrder.remove() : '';
     pauseRt = false;
   } else {
     notificationDialog('failure', rs.message);
@@ -109,19 +172,25 @@ function renderBttUpdateStatus(status) {
   let button;
   switch (status) {
     case 'Placed':
-      button = `<a class="bttUptStatus col" onclick="updateStatusAction(this.parentElement.parentElement)">Xác nhận</a>`
+      button = `<a class="bttUptStatus col-1" onclick="updateStatusAction(this.parentElement.parentElement)">Xác nhận</a>`
       break;
     case 'Confirm':
-      button = `<a class="bttUptStatus col"  onclick="updateStatusAction(this.parentElement.parentElement)">Ship hàng</a>`
+      button = `<a class="bttUptStatus col-1"  onclick="assignShipper(this.parentElement.parentElement)">Phân công</a>`
+      // button = " ";
+      break;
+    case 'Assign':
+      // button = `<a class="bttUptStatus col-1"  onclick="assignShipper(this.parentElement.parentElement)">Phân công</a>`
+      button = " ";
       break;
     case 'Deliver':
-      button = `<a class="bttUptStatus col" style="line-height: 22px; font-size: 13px;" onclick="updateStatusAction(this.parentElement.parentElement)">Khách nhận hàng</a>`
+      // button = `<a class="bttUptStatus col" style="line-height: 22px; font-size: 13px;" onclick="updateStatusAction(this.parentElement.parentElement)">Khách nhận hàng</a>`
+      button = " ";
       break;
     case 'Complete':
-      button = `<a class="complete col"><i class="fa-solid fa-check"></i></a>`
+      button = `<a class="complete col-1"><i class="fa-solid fa-check"></i></a>`
       break;
     case 'Cancel':
-      button = `<a class="disable col">Đã huỷ</a>`
+      button = `<a class="disable col-1">Đã huỷ</a>`
       break;
     default:
       break;
@@ -140,6 +209,10 @@ function renderDateStatus(order) {
       template = `<span class="title">Xác nhận ngày:</span>
             <span class="propety"> ${dateFormat(order.confirm_time)}</span>`
       break;
+    case 'Assign':
+      template = `<span class="title">Phân công ngày:</span>
+              <span class="propety"> ${dateFormat(order.assign_time)}</span>`
+      break;
     case 'Deliver':
       template = `<span class="title">Vận chuyển ngày:</span>
             <span class="propety"> ${dateFormat(order.deliver_time)}</span>`
@@ -156,6 +229,31 @@ function renderDateStatus(order) {
       break;
   }
   return template;
+}
+
+function renderAssignment(order) {
+  let template = '';
+  if (order.status !== 'Placed' && order.status !== 'Confirm' && order.status !== 'Cancel') {
+    template = `<div class="py-1">
+                  <span class="title">Người giao hàng: </span>
+                  <span class="propety">${order.shipper_name}</span>
+                </div>`
+  }
+  return template;
+}
+
+function renderLstShipperIds(shippers) {
+  return shippers.map((shipper) =>
+    `<li class="row px-2 py-1 cursor-pointer bg-white hover:bg-blue-100" shipper-id="${shipper.shipper_id}" onclick="selectShipper(this.getAttribute('shipper-id'))"
+  style="align-items: center;">${shipper.shipper_id}</li>`
+  ).join('')
+}
+
+function renderLstShipperNames(shippers) {
+  return shippers.map((shipper) =>
+    `<li class="row px-2 py-1 cursor-pointer bg-white hover:bg-blue-100" shipper-id="${shipper.shipper_id}" onclick="selectShipper(this.getAttribute('shipper-id'))"
+  style="align-items: center;">${shipper.name}</li>`
+  ).join('')
 }
 
 function renderOrderItem(order_detail) {
@@ -205,7 +303,7 @@ function renderOrder(_orders) {
         <div order-id="${order.order_id}" class="order">
           <!-- Id header -->
           <div class="row">
-            <div class="order-id col-11 row">
+            <div class="order-id col row">
               <div class="col-8">
                 <i class="fa-solid fa-angle-down"></i>
                 <span>Mã đơn hàng: ${order.order_id}</span>
@@ -243,7 +341,7 @@ function renderOrder(_orders) {
               ${renderOrderItem(order.order_detail)}
             </div>
             <!-- Coupon used, discount -->
-            <div class="coupon row py-2">
+            <div class="coupon row py-1">
               <div class="col-8 px-3">
                 <span class="title">Mã giảm giá:</span>
                 <span class="propety"> ${order.discount_code ? order.discount_code : 'Không'}</span>
@@ -263,19 +361,39 @@ function renderOrder(_orders) {
                   <span class="title">Email: </span>
                   <span class="propety"> ${order.email}</span>
                 </div>
+                <div class="py-1">
+                  <span class="title">Phone: </span>
+                  <span class="propety"> ${order.phone}</span>
+                </div>
+                <div class="py-1">
+                  <span class="title">Hình thức thanh toán: </span>
+                  <span class="propety"> 
+                    ${order.payment_method === 'CRYPTO' ?
+        'Tiền mã hóa ETH' : 'Trả tiền mặt khi nhận hàng'}
+                  </span>
+                </div>
               </div>
               <div class="col-4 px-3">
-              <div class="py-1">
-              <span class="title">Phone: </span>
-              <span class="propety"> ${order.phone}</span>
-          </div>
+                ${renderAssignment(order)}
                 <div class="py-1">
                   <span class="title">Giao tới: </span>
                   <span class="propety">${order.address}</span>
                 </div>
               </div>
-              <h6 class="col-2 item-propety">Tổng</h6>
-              <span id="cal-total" class="col-2 item-total item-propety">${priceFormat(order.total)} VND</span>
+              <div class="col-4 px-3">
+                <div class="py-1 d-flex flex-row">
+                  <h6 class="col-6 item-propety">Tổng</h6>
+                  <span id="cal-total" class="col-6 item-total item-propety">${priceFormat(order.total)} VND</span>
+                </div>
+                ${order.eth_pay ?
+        `<div class="py-1 d-flex flex-row">
+                  <h6 class="col-6 item-propety">Đã trả</h6>
+                  <span id="eth-pay" class="col-6 item-total item-propety">
+                    ${order.eth_pay}
+                    <i class="fa-brands fa-ethereum px-2"></i> 
+                  </span>
+                </div>`: ''}
+              </div>
             </div>
           </div>
         </div>`

@@ -69,7 +69,13 @@
 
         <div class="actionbar">
             <i id="notification" class="ti-bell"></i>
-            <a id="user" href="#"><img src="" alt="" id="avatar"></a>
+            <div id="user">
+                <img src="" alt="" id="avatar">
+                <ul id="more-option">
+                    <li id="logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: crimson;"></i>
+                        Đăng xuất</li>
+                </ul>
+            </div>
             <a id="login" href="./login.html">Đăng nhập</a>
         </div>
     </section>
@@ -77,13 +83,19 @@
     <section id="main" class="pb-5" style="display: flex;">
         <div class="container mb-5" style="height: 100%;">
             <div id="overall-revenue" class="row">
-                <div id="alltime-total" class="overall-item col-6">
+                <div id="alltime-total" class="overall-item col-4">
                     <h5>Doanh thu hôm nay</h5>
                     <h1></h1>
                 </div>
-                <div id="completeorderscount" class="overall-item col-6">
+                <div id="completeorderscount" class="overall-item col-4">
                     <h5>Hôm nay đã hoàn thành</h5>
                     <h1></h1>
+                </div>
+                <div id="completeorderscount" class="overall-item col-4">
+                    <h5>Số ETH hợp đồng thông minh đang giữ</h5>
+                    <h1 id="contract-balance" style="display: flex;justify-content: center;color: #3a4d85;">
+                        0 <img src="../img/Ethereum-icon.svg" style="height: 44px;">
+                    </h1>
                 </div>
             </div>
 
@@ -91,9 +103,15 @@
             <h4 class="mb-3">Thống kê:</h4>
             <div class="select-date mb-4">
                 <label for="dayfrom">Từ ngày</label>
-                <input id="dayfrom" name="dayfrom" type="date" class="form-control" onchange="getStatisticData()">
+                <input id="dayfrom" name="dayfrom" type="date" class="form-control" onfocusout="getStatisticData()">
                 <label for="dayto">Đến ngày</label>
-                <input id="dayto" name="dayto" type="date" class="form-control" onchange="getStatisticData()">
+                <input id="dayto" name="dayto" type="date" class="form-control" onfocusout="getStatisticData()">
+
+                <button style="padding: 4px; border: 2px solid #b4b4b4; border-radius: 4px; background: white;"
+                    onclick="exportPDF()">
+                    <i class="fa-regular fa-file-pdf" style="font-size: 24px; margin-right: 4px;"></i>
+                    Xuất thống kê
+                </button>
             </div>
             <div id="data-container" style="display: none;">
                 <h4 id="tittle-revenuechart" class="mt-5 mb-4 px-3">Thống kê doanh thu:</h4>
@@ -110,14 +128,14 @@
                         <option value="bar">Cột</option>
                     </select>
                 </div>
-                <div class="row">
+                <div id="revenueChartContainer" class="row">
                     <div id="revenueChart" class="col-8"></div>
                     <div class="col-4 p-4">
                         <div class="label-container">
                             <span>Tổng đơn hàng:</span><span id="sum-order">0 Đơn</span>
                         </div>
                         <div class="label-container">
-                            <span>Tổng doanh thu:</span><span id="sum-revenue">0 Đơn</span>
+                            <span>Tổng doanh thu:</span><span id="sum-revenue" style="width:max-content"></span>
                         </div>
                     </div>
                 </div>
@@ -130,6 +148,9 @@
                         </div>
                         <div class="label-container">
                             <span>Đã xác nhận:</span><span id="Confirm">0 Đơn</span>
+                        </div>
+                        <div class="label-container">
+                            <span>Đã phân công:</span><span id="Assign">0 Đơn</span>
                         </div>
                         <div class="label-container">
                             <span>Vận chuyển:</span><span id="Deliver">0 Đơn</span>
@@ -148,12 +169,15 @@
     <section id="dialog">
 
     </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="../scripts/lib/times-normal.js"></script>
     <script src="../scripts/api/user.js"></script>
     <script src="../scripts/api/order.js"></script>
     <script src="../scripts/lib/globalfunc.js"></script>
     <script src="../scripts/header.js"></script>
     <script src="../scripts/renderer.js"></script>
     <script src="../scripts/statistic.js"></script>
+    <script type='module' src="../scripts/smartcontract_statistic.js"></script>
     <script>
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {

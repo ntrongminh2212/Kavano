@@ -19,16 +19,14 @@ export const calcRating = async (product) => {
         var sql = `SELECT IFNULL(AVG(score),0) AS score, COUNT(rating.product_id) AS rating_count
             FROM rating
             WHERE product_id = ${product.product_id}`;
-        var promise = new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             db.query(sql, (err, rating) => {
                 product["score"] = rating[0].score;
                 product["rating_count"] = rating[0].rating_count;
                 resolve(product);
             });
         })
-        product = await promise;
     }
-    return product;
 }
 
 export const querySizesById = (id, checkStock = true) => {
@@ -243,6 +241,11 @@ export const getFeature = (req, res) => {
 
 export const getSearch = (req, res) => {
     var searchStr = req.params.search;
+    searchStr = searchStr.trim();
+    while (searchStr.includes('  ')) {
+        searchStr = searchStr.replace('  ', ' ')
+    }
+
     const sql = stockProductsSQL +
         `AND (product.name LIKE '%${searchStr}%' OR category.name LIKE '%${searchStr}%' OR brand.name LIKE '%${searchStr}%')`
 

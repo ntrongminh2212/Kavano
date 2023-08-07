@@ -1,0 +1,215 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác nhận đặt hàng</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/header.css">
+    <link rel="stylesheet" href="../css/confirm-order.css">
+    <link rel="stylesheet" href="../css/custom-element.css">
+    <link rel="stylesheet" href="../css/chatbox.css">
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <!-- Icon -->
+    <link rel="stylesheet" href="../font/themify-icons/themify-icons.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://kit.fontawesome.com/a44f840e5f.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <section id="header">
+        <a href="./home.html"><img src="../img/logo.png" class="logo"></a>
+        <div class="searchbox">
+            <i id="ti-search" class="ti-search"></i>
+            <form action="./search-results.html" method="GET" id="searchform">
+                <input id="searchbar" name="searchbar" type="text" placeholder="Tìm kiếm sản phẩm..."
+                    autocomplete="off">
+            </form>
+            <div id="search-results">
+
+            </div>
+        </div>
+
+        <div class="actionbar">
+            <i id="mycart" class="ti-shopping-cart">
+                <span id="cartamount"></span>
+            </i>
+            <i id="notification" class="ti-bell"></i>
+            <div id="user" href="#">
+                <img src="../img/avatar.png" alt="" id="avatar">
+                <ul id="more-option">
+                    <li><i class="fa-solid fa-truck-fast" style="color: #256cc0;"></i>
+                        <a id="abc" href="./my-orders.html"> Đơn hàng của bạn</a>
+                    </li>
+                    <li id="logout"><i class="fa-solid fa-arrow-right-from-bracket" style="color: crimson;"></i>
+                        Đăng xuất</li>
+                </ul>
+            </div>
+            <a id="login" href="./login.html">Đăng nhập</a>
+        </div>
+    </section>
+
+    <section id="main">
+        <div style="padding: 0 52;">
+            <div class="row mt-4">
+                <h4>Xác nhận đặt hàng</h4>
+                <div id="cart" class="left-side col-8">
+                    <div id="table-column" class="row">
+                        <div id="product" class="item-propety col-6">
+                            Sản phẩm
+                        </div>
+                        <div id="price" class="item-propety col-2">
+                            Đơn giá
+                        </div>
+                        <div id="amount" class="item-propety col-2">
+                            Số lượng
+                        </div>
+                        <div id="total" class="item-propety col-2">
+                            Thành tiền
+                        </div>
+                    </div>
+                    <div id="cart-all-items">
+
+                    </div>
+                    <div class="row info-form">
+                        <span style="font-weight: 600;">Địa chỉ nhận hàng:</span>
+                        <span id="address"></span>
+                    </div>
+                    <div class="row info-form">
+                        <span style="font-weight: 600;">Mã giảm giá:</span>
+                        <span id="discount-code"></span>
+                    </div>
+                </div>
+                <div class="right-side col-4">
+                    <div id="shipping" class="payment-info p-3">
+                        <span style="font-size: 18px; font-weight: 600;">Phương thức thanh toán:</span>
+                        <span class="form-message" style="transform: translate(6px, 4px);"></span>
+                        <hr class="my-2">
+
+                        <div class="payment-method">
+                            <div>
+                                <input id="crypto" name="method" type="radio" value="1">
+                                <i class="fa-brands fa-ethereum"></i>
+                                <label for="crypto" class="method" style="margin-right: 30px;">Trả bằng Ethereum</label>
+                            </div>
+                            <div>
+                                <input id="cash" name="method" type="radio" value="0" checked="">
+                                <i class="fa-solid fa-money-bills"></i>
+                                <label for="cash" class="method">Trả tiền mặt khi nhận hàng</label>
+                            </div>
+                        </div>
+                        <div id="payment" class="payment-info">
+                            <hr class="my-2" style="margin-top: 12px!important;">
+                            <div class="trow total">
+                                <span>Tạm tính: </span>
+                                <span id="preview-total">0 VND</span>
+                            </div>
+                            <div class="trow total">
+                                <span>Giảm giá: </span>
+                                <span id="discount"> -0 VND</span>
+                            </div>
+                            <hr class="my-2">
+                            <div class="trow total mb-2">
+                                <span>Tổng: </span>
+                                <span id="cal-total"> 0 VND</span>
+                            </div>
+                            <div class="trow total eth-pay-container mb-2" style="display: none;">
+                                <span>Khoảng: </span>
+                                <span id="eth-pay">≈ 0
+                                    <i class="fa-brands fa-ethereum"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button id="go-order" class="mt-2">Xác nhận đặt hàng</button>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+    <section id="dialog">
+
+    </section>
+    <div id="chatbox">
+        <aside class="col-4">
+            <ul id="list-shippers">
+                <li>
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_01.jpg" alt="">
+                    <div>
+                        <h2>Prénom Nom</h2>
+                        <span>abc abc</span>
+                        <span>5 phut truoc</span>
+                    </div>
+                </li>
+                <li>
+                    <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/chat_avatar_10.jpg" alt="">
+                    <div>
+                        <h2>Prénom Nom</h2>
+                        <!-- <h3>
+                            <span class="status orange"></span>
+                            offline
+                        </h3> -->
+                    </div>
+                </li>
+            </ul>
+        </aside>
+        <main class="col-8 d-inline-flex flex-column">
+            <header class="col-1 d-inline-flex flex-row">
+                <div class="col-10">
+                    <h2 id="shipperr-name">Nhắn tin</h2>
+                </div>
+            </header>
+            <ul id="chat" class="col-8">
+
+            </ul>
+            <footer class="col-3 d-inline-flex flex-row">
+                <textarea id="typed-text" class="col-10" placeholder="Type your message"></textarea>
+                <a id="send-msg" class="col-2" href="#">Gửi</a>
+            </footer>
+        </main>
+        <i id="close-chatbox" class="fa-sharp fa-solid fa-xmark col-1"></i>
+    </div>
+    <div id="chatbox-colapse">
+        <div class=" d-inline-flex flex-row">
+            <i class="fa-solid fa-message col-1 col-2"></i>
+            <h2 class="col-9" style="display: inline-block;">Tin nhắn</h2>
+            <span id="msgnotreadcount" class="col-1">2</span>
+        </div>
+    </div>
+    <!--Firebase Chatbox-->
+    <script type="module" src="../scripts/firebase.js"></script>
+    <script type="module" src="../scripts/chatbox.js"></script>
+
+    <!--Eth payment-->
+    <script src="../scripts/lib/globalfunc.js"></script>
+    <script src="../scripts/api/product.js"></script>
+    <script src="../scripts/api/user.js"></script>
+    <script src="../scripts/header.js"></script>
+    <script src="../scripts/renderer.js"></script>
+    <script type="module" src="../scripts/confirm-order.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+</body>
+
+</html>
